@@ -1,0 +1,132 @@
+#!/usr/bin/lua
+--[[
+  *******************************************************************
+  **                                                               **
+  **                   Lua 6502 Assembler                          **
+  **                                                               **
+  **                 (?) 2022 by A.C.M. on                         **
+  **                Deadsoft Development Corp.                     **
+  **                                                               **
+  *******************************************************************
+]]--
+
+ass = {}
+ass.source = {}
+ass.code = {}
+ass.start = 0
+ass.pc = 0
+ass.filename = ... or ""                                                                 -- Filename as Argument
+ass.debug = true
+ass.current_line = 0
+ass.labels = {}
+ass.pass = 1
+
+local a = ass
+            
+ass.base = 0
+ass.registered_command = {}
+
+dofile("log.lua")
+dofile("lib.lua")
+dofile("parser.lua")
+
+local l = logger
+
+if(a.debug) then
+  l.filename = a.filename .. ".log"
+
+end -- if(a.debug)
+
+l.log("Try to load commands.")
+local commands = {
+                    -- Commands with Pass 1
+                    "cmd_star.lua",
+                    "cmd_lda.lua",
+                    "cmd_sta.lua",
+                    "cmd_and.lua",
+                    "cmd_eor.lua",
+                    "cmd_adc.lua",
+                    "cmd_sbc.lua",
+                    "cmd_cmp.lua",
+                    "cmd_cpx.lua",
+                    "cmd_cpy.lua",
+                    "cmd_dec.lua",
+                    "cmd_inc.lua",
+                    "cmd_rol.lua",
+                    "cmd_asl.lua",
+                    "cmd_lsr.lua",
+                    "cmd_ror.lua",
+                    "cmd_ldx.lua",
+                    "cmd_ldy.lua",
+                    "cmd_stx.lua",
+                    "cmd_sty.lua",
+                    "cmd_jmp.lua",
+                    "cmd_jsr.lua",
+                    "cmd_bit.lua",
+                    
+                    -- Commands without Pass 1
+                    "cmd_dex.lua",
+                    "cmd_dey.lua",
+                    "cmd_inx.lua",
+                    "cmd_iny.lua",
+                    "cmd_clc.lua",
+                    "cmd_sec.lua",
+                    "cmd_cld.lua",
+                    "cmd_sed.lua",
+                    "cmd_cli.lua",
+                    "cmd_sei.lua",
+                    "cmd_clv.lua",
+                    "cmd_nop.lua",
+                    "cmd_rts.lua",
+                    "cmd_rti.lua",
+                    "cmd_brk.lua",
+                    "cmd_tax.lua",
+                    "cmd_txa.lua",
+                    "cmd_tay.lua",
+                    "cmd_tya.lua",
+                    "cmd_tsx.lua",
+                    "cmd_txs.lua",
+                    "cmd_pla.lua",
+                    "cmd_pha.lua",
+                    "cmd_plp.lua",
+                    "cmd_php.lua",
+                    
+                  }
+                  
+for k,v in pairs(commands) do
+  dofile("cmd/" .. v)
+  l.log("Command " .. v .. " successfully loaded.")
+  
+end -- for k,v
+
+if(a.filenname == "") then 
+    print("Usage: lua_ass <Filename>")
+    print("Error, no filename given")
+    return
+    
+end -- if(a.filename
+
+local file = io.open(a.filename, "r")
+
+if(not file) then
+  print(a.filename)
+  a.lib.write_error(01)
+  return
+
+end -- if(not file
+
+l.open()
+l.log(" ---===<<< Start >>>===---")
+l.log("Reading file " .. a.filename .. ".")
+
+local lnumber = 0
+
+-- Read the source-code.
+for line in io.lines(a.filename) do
+  lnumber = lnumber + 1
+  table.insert(a.source, string.lower(line))
+
+end
+
+file:close()
+a.lib.parse()

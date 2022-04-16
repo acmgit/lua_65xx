@@ -1,0 +1,39 @@
+; ******************************************
+; **                                      **
+; **         Testprogramm                 **
+; **                                      **
+; ******************************************
+
+* = $0801                                       ; Start of Basicram
+
+    lda #02                                     ; Color red
+    sta $d020                                   ; to the Border
+    rts
+    
+    lda $05
+    and #03
+    sta $c000
+    rts
+    
+* = %1111111100000000
+
+    lda (%00000100)
+    sta $c001
+    rts
+    
+    lda $00,y
+    lda #$af
+    lda 8192
+    lda $c000
+    dey
+    dex
+    lda $c000,x
+    lda ($20,x)
+    cmp #05
+    eor $a000
+    adc #01
+    
+    inx
+    iny
+    
+* = 2048
