@@ -34,6 +34,7 @@ local l = logger
 
 if(a.debug) then
   l.filename = a.filename .. ".log"
+  l.open()
 
 end -- if(a.debug)
 
@@ -91,11 +92,20 @@ local commands = {
                     "cmd_plp.lua",
                     "cmd_php.lua",
                     
+                    -- Branch commands
+                    "cmd_bpl.lua",
+                    "cmd_bmi.lua",
+                    "cmd_bvc.lua",
+                    "cmd_bcc.lua",
+                    "cmd_bcs.lua",
+                    "cmd_bne.lua",
+                    "cmd_beq.lua",
+                    
                   }
                   
 for k,v in pairs(commands) do
   dofile("cmd/" .. v)
-  l.log("Command " .. v .. " successfully loaded.")
+  l.log("Command " .. v .. " loaded.")
   
 end -- for k,v
 
@@ -115,7 +125,6 @@ if(not file) then
 
 end -- if(not file
 
-l.open()
 l.log(" ---===<<< Start >>>===---")
 l.log("Reading file " .. a.filename .. ".")
 

@@ -1,7 +1,7 @@
 local a = ass
 local l = logger
 local cname = "inc"
-
+local code
 
 a.registered_command[cname] = function(param)
             

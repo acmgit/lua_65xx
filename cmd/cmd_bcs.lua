@@ -1,7 +1,9 @@
 local a = ass
 local l = logger
-local cname = "ldy"
-local code
+local cname = "bcs"
+local code = "b0"
+
+local pass_1
 
 a.registered_command[cname] = function(param)
             

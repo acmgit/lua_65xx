@@ -36,4 +36,8 @@
     inx
     iny
     
+    cmp #05
+    bne $080a
+    beq 2078
+    
 * = 2048
