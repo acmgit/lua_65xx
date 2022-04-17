@@ -16,7 +16,7 @@ lib.error = {
 function lib.check(cmd)
     local line
     if((not cmd[1]) or (cmd[1] == "")) then
-        print(a.current_line .. ":")
+        --print(a.current_line .. ":")
         return
         
     else
@@ -199,11 +199,10 @@ function lib.check_indirect(text)
     
 end -- function check_indirect
     
-
-function lib.print_line(para1, para2, para3)
-    print(a.current_line .. ": <" .. a.pc .."> " .. para1 .. " " .. para2 .. " " .. para3)
+function lib.pass_1_only_cmd(cmd)
+    table.insert(a.code, cmd[1])
     
-end -- print_line
+end
 
 function lib.pass_1(cmd)
     a.lib.check_flags(cmd[2])
@@ -228,7 +227,7 @@ function lib.pass_1(cmd)
     end -- if(base
     
     line = cmd[1] .. " " .. value .. " |" .. flags
-    print(a.current_line .. ": " .. line)
+    table.insert(a.code, line)
     
 end -- function pass_1
 

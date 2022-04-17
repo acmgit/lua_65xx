@@ -6,38 +6,60 @@
 
 * = $0801                                       ; Start of Basicram
 
-    lda #02                                     ; Color red
-    sta $d020                                   ; to the Border
-    rts
-    
-    lda $05
-    and #03
-    sta $c000
-    rts
-    
-* = %1111111100000000
-
-    lda (%00000100)
-    sta $c001
-    rts
-    
-    lda $00,y
-    lda #$af
-    lda 8192
-    lda $c000
-    dey
+    adc #15
+    and 2763
+    asl #63
+    bcc 2763
+    bcs 2763
+    beq 2763
+    bit #01
+    bmi 2763
+    bne 2763
+    bpl 2763
+    brk
+    bvc 2763
+    bvs 2763
+    clc
+    cld
+    cli
+    clv
+    cmp #03
+    cpx #20
+    cpy #20
+    dec 05
     dex
-    lda $c000,x
-    lda ($20,x)
-    cmp #05
-    eor $a000
-    adc #01
-    
+    dey
+    eor #63
+    inc 05
     inx
     iny
+    jmp (2763)
+    jsr 2763
+    lda 60
+    ldx 2763
+    ldy #65
+    lsr 6330
+    nop
+    ora #$55
+    pha
+    php
+    pla
+    plp
+    rol 6345
+    ror 6345
+    rti
+    rts
+    sbc #%11001100
+    sec
+    sei
+    sta 53768,x
+    stx 05
+    sty $c000
+    tax
+    tay
+    tsx
+    txa
+    txs
+    tya
     
-    cmp #05
-    bne $080a
-    beq 2078
     
-* = 2048

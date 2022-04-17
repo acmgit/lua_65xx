@@ -1,14 +1,13 @@
 local a = ass
 local l = logger
 local cname = "rts"
-
-local pass_1
+local code = "60"
 
 a.registered_command[cname] = function(param)
             
     local passes = {}
     
-    passes[1] = pass_1(cname)
+    passes[1] = a.lib.pass_1_only_cmd(param)
 
     if(passes[a.pass]) then
         passes[a.pass](param)                                                            -- Call the Function of the Pass
@@ -17,10 +16,5 @@ a.registered_command[cname] = function(param)
         l.log(cname .. " - unkown Pass: " .. a.pass)
     
     end
-    
-end
-
-function pass_1(cname)
-    print(a.current_line .. ": " .. cname)
     
 end

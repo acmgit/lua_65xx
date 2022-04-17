@@ -3,13 +3,11 @@ local l = logger
 local cname = "plp"
 local code = "28"
 
-local pass_1
-
 a.registered_command[cname] = function(param)
             
     local passes = {}
     
-    passes[1] = pass_1(cname)
+    passes[1] = a.lib.pass_1_only_cmd(param)
 
     if(passes[a.pass]) then
         passes[a.pass](param)                                                            -- Call the Function of the Pass
@@ -21,7 +19,3 @@ a.registered_command[cname] = function(param)
     
 end
 
-function pass_1(cname)
-    print(a.current_line .. ": " .. cname)
-    
-end

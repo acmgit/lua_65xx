@@ -46,6 +46,7 @@ local commands = {
                     "cmd_sta.lua",
                     "cmd_and.lua",
                     "cmd_eor.lua",
+                    "cmd_ora.lua",
                     "cmd_adc.lua",
                     "cmd_sbc.lua",
                     "cmd_cmp.lua",
@@ -96,6 +97,7 @@ local commands = {
                     "cmd_bpl.lua",
                     "cmd_bmi.lua",
                     "cmd_bvc.lua",
+                    "cmd_bvs.lua",
                     "cmd_bcc.lua",
                     "cmd_bcs.lua",
                     "cmd_bne.lua",
@@ -139,3 +141,8 @@ end
 
 file:close()
 a.lib.parse()
+
+for k,v in pairs(a.code) do
+  print(v)
+  
+end
