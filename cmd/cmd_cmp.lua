@@ -12,9 +12,6 @@ a.registered_command[cname] = function(param)
     if(passes[a.pass]) then
         passes[a.pass](param)                                                            -- Call the Function of the Pass
 
-    else
-        l.log(cname .. " - unkown Pass: " .. a.pass)
-    
     end
     
 end

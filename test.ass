@@ -7,14 +7,14 @@
 * = $0801                                       ; Start of Basicram
 
     adc #15
-    and 2763
+    and 2763,y
     asl #63
     bcc 2763
     bcs 2763
     beq 2763
     bit #01
     bmi 2763
-    bne 2763
+    bne 2763,x
     bpl 2763
     brk
     bvc 2763
@@ -26,11 +26,11 @@
     cmp #03
     cpx #20
     cpy #20
-    dec 05
+    dec (05),x
     dex
     dey
     eor #63
-    inc 05
+    inc (05),y
     inx
     iny
     jmp (2763)
@@ -61,5 +61,3 @@
     txa
     txs
     tya
-    
-    

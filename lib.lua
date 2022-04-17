@@ -47,7 +47,6 @@ function lib.check(cmd)
 end -- function lib.check
 
 function lib.clear_flags()
-    l.log("Clear Flags ...")
     for k,v in pairs(lib.command_is) do
         table.remove(lib.command_is, k)
         
@@ -88,7 +87,6 @@ end
  
 function lib.get_value(parameter)
     local value
-    local flag
     local base
     
     value = string.match(parameter, "[%x]+")
@@ -146,59 +144,85 @@ function lib.write_error(number)
 end -- function a.write_error
 
 function lib.check_flags(cmd)
+    local flag = ""
     
-    lib.check_immediate(cmd)
-    lib.check_absolut(cmd)
-    lib.check_indirect(cmd)
+    flag = lib.check_absolut(cmd)
+    flag = flag .. lib.check_idx(cmd)
+    flag = flag .. lib.check_immediate(cmd)
+    flag = flag .. lib.check_indirect(cmd)
+    flag = flag .. lib.check_zero(cmd)
+
+    l.log(flag)
+    table.insert(lib.command_is, flag)
     
 end
 
+function lib.check_zero(text)
+    local check = string.match(text, "[%w]+")
+    if(string.len(check) == 2) then        
+        return " zro"
+    
+    end
+    
+    return ""
+   
+end
 -- check the source for a # and convert the value behind
 function lib.check_immediate(text)
-    local check = string.match(text, "#")
-
+    local check = string.find(text, "#",1)
     if(check) then
-        table.insert(lib.command_is, "imm")
+        return " imm"
     
     end -- if(pos)
+    
+    return ""
     
 end -- function lib.check_immediate
 
 function lib.check_absolut(text)
-    local check = string.match(text,"[#%(]")
+    local check = (string.find(text,"#",1) or string.find(text, "%("))
+            
     if(not check) then
+        return " abs"
     
-        check = string.match(text, "[,x]")
-        if(check) then
-            table.insert(lib.command_is, "abx")
-        
-        else
-            check = string.match(text, "[,y]")
-            if(check) then
-                table.insert(lib.command_is,"aby")
-                
-            else
-                table.insert(lib.command_is, "abs")
-                
-            end -- if(check
-            
-        end -- if(check
-            
-    end-- if(string.sub
-        
+    end
+    
+    return ""
+    
 end -- function check_absolut
     
 
 function lib.check_indirect(text)
-    local pos = string.match(text, "[%(]")
-    
+    local pos = string.find(text, "%(", 1)
     if(pos) then
-        table.insert(lib.command_is, "ind")
+        return " ind"
     
-    end-- if(string.sub
+    end -- if(string.sub
+    
+    return ""
     
 end -- function check_indirect
+
+function lib.check_idx(text)
+    local check = string.find(text, ",x", 1)
     
+    if(check) then
+        return " idx"
+        
+    else
+        check = string.find(text, ",y", 1)
+        if(check) then
+            return " idy"
+        
+        end -- if(check
+        
+    end -- if(check
+    
+    return ""
+    
+end
+
+        
 function lib.pass_1_only_cmd(cmd)
     table.insert(a.code, cmd[1])
     
