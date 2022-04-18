@@ -1,50 +1,18 @@
 -- lib.lua
 
 local a = ass
-a.lib = {}
 local lib = a.lib
 local l = logger
 
 lib.command_is = {}
                     
 lib.error = {
-              "Ok. No Error.",                  -- 00
-              "File not found.",                -- 01
-              "Synthax Error.",                 -- 02
+              [0] = "Ok. No Error found.",                                               -- 00
+              "File not found.",                                                         -- 01
+              "Unknown Command found.",                                                  -- 02
+              "Range Error: Only Byte allowed.",                                         -- 03
+              
             }
-
-function lib.check(cmd)
-    local line
-    if((not cmd[1]) or (cmd[1] == "")) then
-        --print(a.current_line .. ":")
-        return
-        
-    else
-        if(not cmd[3]) then
-            if( not cmd[2]) then
-                line = cmd[1]
-                
-            else
-                line = cmd[1] .. " " .. cmd[2]
-                
-            end -- if(not cmd[2]
-        
-        else
-            line = cmd[1] .. " " .. cmd[2] .. " " .. cmd[3]
-        
-       end -- if(not cmd[3]
-       
-    end -- if(not.registered_command
-    
-    if(a.registered_command[cmd[1]]) then
-        a.registered_command[cmd[1]](cmd)
-        --print(a.current_line .. ": " .. line)
-    else
-        print(a.current_line .. ": " .. line .. " <" .. a.lib.error[3] .. " >")
-    
-    end -- if(registered_command
-    
-end -- function lib.check
 
 function lib.clear_flags()
     for k,v in pairs(lib.command_is) do
@@ -59,13 +27,7 @@ function lib.split(parameter)
         local comment
         
         if(parameter == nil) then return end
-        
-        comment = string.find(parameter, ";")
-        if(comment) then                                                                -- Comment found
-            parameter = string.sub(parameter,1,comment)
-            
-        end
-        
+                
         lib.trim(parameter)
         for word in string.gmatch(parameter, "[%w%-%:%%%(%)%,%*%#%$%=%.2f%_]+") do
             table.insert(cmd, word)

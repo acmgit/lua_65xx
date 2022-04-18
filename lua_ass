@@ -11,20 +11,26 @@
 ]]--
 
 ass = {}
-ass.source = {}
-ass.code = {}
-ass.start = 0
-ass.pc = 0
+ass.source = {}                                                                          -- Source-Code
+ass.code = {}                                                                            -- Working Code
+ass.labels = {}                                                                          -- Table of Labels
+ass.lib = {}                                                                             -- Function-Lib for the Assembler
+ass.lib.parse = {}                                                                       -- The Steps to Pass
+ass.registered_command = {}                                                              -- Command the Assembler knows
+ass.error = {}                                                                           -- Reports with Number. 0 = Ok.
+
+ass.start = 0                                                                            -- Current Base to Calc, Command *
+ass.pc = 0                                                                               -- Current Adress of the Processorpointer
 ass.filename = ... or ""                                                                 -- Filename as Argument
-ass.debug = true
-ass.current_line = 0
-ass.labels = {}
-ass.pass = 1
+ass.debug = true                                                                         -- Error-Flag, true = all ok
+ass.current_line = 0                                                                     -- Current line to process
+
+ass.pass = 1                                                                             -- Current Assembler-Pass
+ass.base = 0
 
 local a = ass
             
-ass.base = 0
-ass.registered_command = {}
+
 
 dofile("log.lua")
 dofile("lib.lua")
@@ -140,7 +146,14 @@ for line in io.lines(a.filename) do
 end
 
 file:close()
-a.lib.parse()
+
+for i=1,#a.lib.parse do
+
+  print("Assembling Pass " .. i)
+  a.pass = i
+  a.lib.parse[i]()
+
+end
 
 for k,v in pairs(a.code) do
   print(v)

@@ -10,9 +10,9 @@
     and 2763,y
     asl #63
     bcc 2763
-    bcs 2763
+    bcs 2763                                    ; This is a comment ...
     beq 2763
-    bit #01
+    bit #1
     bmi 2763
     bne 2763,x
     bpl 2763
@@ -36,8 +36,8 @@
     jmp (2763)
     jsr 2763
     lda 60
-    ldx 2763
-    ldy #65
+    ldx 2763 * 5 / 7
+    ldy #$65+ $3*%1100
     lsr 6330
     nop
     ora #$55
