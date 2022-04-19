@@ -19,12 +19,14 @@
     brk
     bvc 2763
     bvs 2763
+test_label_05:
     clc
     cld
     cli
     clv
     cmp #03
     cpx #20
+    lda #test_label_05:
     cpy #20
     dec (05),x
     dex
@@ -37,7 +39,7 @@
     jsr 2763
     lda 60
     ldx 2763 * 5 / 7
-    ldy #$65+ $3*%1100
+    ldy #$65+$3*%1100
     lsr 6330
     nop
     ora #$55

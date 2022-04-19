@@ -51,9 +51,20 @@ function lib.get_value(parameter)
     local value
     local base
     
-    value = string.match(parameter, "[%x]+")
-    base = string.match(parameter, "[%$%%]")
+    if(parameter:match("[%+%-%*/]")) then
+        l.log("Is Formula")
         
+    end
+    
+    if(not parameter:find(":")) then
+        value = string.match(parameter, "[%x]+")
+        base = string.match(parameter, "[%$%%]")
+    else
+        value = parameter
+        base = ""
+    
+    end
+    
     return base, value
     
 end -- function get_value
@@ -114,7 +125,6 @@ function lib.check_flags(cmd)
     flag = flag .. lib.check_indirect(cmd)
     flag = flag .. lib.check_zero(cmd)
 
-    l.log(flag)
     table.insert(lib.command_is, flag)
     
 end

@@ -34,7 +34,7 @@ local a = ass
 
 dofile("log.lua")
 dofile("lib.lua")
-dofile("parser.lua")
+dofile("parser_6502.lua")
 
 local l = logger
 
@@ -155,7 +155,7 @@ for i=1,#a.lib.parse do
 
 end
 
-for k,v in pairs(a.code) do
+for k,v in pairs(a.source) do
   print(v)
   
 end
