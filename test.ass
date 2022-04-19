@@ -45,6 +45,7 @@ test_label_05:
     ora #$55
     pha
     php
+noch_ein_label:
     pla
     plp
     rol 6345

@@ -29,8 +29,13 @@ ass.pass = 1                                                                    
 ass.base = 0
 
 local a = ass
-            
 
+if((a.filenname == "") or (not a.filename)) then 
+    print("Usage: lua_ass <Filename>")
+    print("Error, no filename given")
+    os.exit()
+    
+end -- if(a.filename
 
 dofile("log.lua")
 dofile("lib.lua")
@@ -46,8 +51,11 @@ end -- if(a.debug)
 
 l.log("Try to load commands.")
 local commands = {
-                    -- Commands with Pass 1
+                    -- Special Assembler-Command
                     "cmd_star.lua",
+                    "cmd_label.lua",
+                    
+                    -- Commands with Pass 1
                     "cmd_lda.lua",
                     "cmd_sta.lua",
                     "cmd_and.lua",
@@ -117,19 +125,12 @@ for k,v in pairs(commands) do
   
 end -- for k,v
 
-if(a.filenname == "") then 
-    print("Usage: lua_ass <Filename>")
-    print("Error, no filename given")
-    return
-    
-end -- if(a.filename
-
 local file = io.open(a.filename, "r")
 
 if(not file) then
   print(a.filename)
   a.lib.write_error(01)
-  return
+  os.exit()
 
 end -- if(not file
 
@@ -147,15 +148,24 @@ end
 
 file:close()
 
-for i=1,#a.lib.parse do
-
-  print("Assembling Pass " .. i)
-  a.pass = i
-  a.lib.parse[i]()
-
-end
-
 for k,v in pairs(a.source) do
   print(v)
   
 end
+
+for i=1,#a.lib.parse do
+
+  print("Assembling Pass " .. i)
+  l.log("Assembling Pass " .. i)
+  
+  a.pass = i
+  a.lib.parse[i]()
+  a.code = a.source
+  
+  for k,v in pairs(a.source) do
+  print(v)
+  
+  end -- for k,v
+  
+end -- for i=
+
