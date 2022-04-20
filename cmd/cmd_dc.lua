@@ -31,10 +31,7 @@ function pass_1(cmd)
         
     end
     
-    line = "dc " 
-    print(" ---dc---- ")
     for k,v in pairs(data) do
-        print(v)
         local x = ""
         if(v:find(":")) then                                                             -- is it a label?
             x = v
@@ -49,7 +46,6 @@ function pass_1(cmd)
             x = a.lib.dec2hex(v)
             
         else                                                                             -- no, it's a string
-            print(v)
             for b=1, v:len() do
                 x = x .. a.lib.dec2hex(v:byte(b,b)) .. " "
             
@@ -59,7 +55,6 @@ function pass_1(cmd)
 
         line = line .. x .. " "
     end
-    
     
     table.insert(a.code, line)
     

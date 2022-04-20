@@ -15,6 +15,13 @@ lib.error = {
               
             }
 
+function lib.write_error(number)
+
+    print(number .. ": " .. lib.error[number])
+    --l.log(lib.error[number])
+    
+end -- function a.write_error
+
 function lib.clear_flags()
     for k,v in pairs(lib.command_is) do
         table.remove(lib.command_is, k)
@@ -110,13 +117,6 @@ function lib.convert_to_hex(cmd)
     return "$" .. second
     
 end -- check_base
-
-function lib.write_error(number)
-    number = number + 1
-    print(ass.error[number])
-    l.log(ass.error[number])
-    
-end -- function a.write_error
 
 function lib.check_flags(cmd)
     local flag = ""

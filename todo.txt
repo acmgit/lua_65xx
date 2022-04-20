@@ -1,0 +1,8 @@
+checking Base, only once in a codefile allowed
+dc to insert data in a code, like tables.
+dw to insert datawords in a code, like adresses
+ds to insert screencodes
+#include to insert other textpieces
+#incbin to include binary datas
+calculate formulas in the code
+calculate labels with an adress like label: = $ab1e

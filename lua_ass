@@ -150,11 +150,6 @@ end
 
 file:close()
 
-for k,v in pairs(a.source) do
-  print(v)
-  
-end
-
 for i=1,#a.lib.parse do
 
   print("Assembling Pass " .. i)
@@ -164,10 +159,10 @@ for i=1,#a.lib.parse do
   a.lib.parse[i]()
   a.code = a.source
   
-  for k,v in pairs(a.source) do
-  print(v)
+--  for k,v in pairs(a.source) do
+--  print(v)
   
-  end -- for k,v
+--  end -- for k,v
   
 end -- for i=
 
