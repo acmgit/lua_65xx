@@ -11,6 +11,7 @@ lib.error = {
               "File not found.",                                                         -- 01
               "Unknown Command found.",                                                  -- 02
               "Range Error: Only Byte allowed.",                                         -- 03
+              "Base error, * is twice in the code."                                      -- 04 
               
             }
 
@@ -70,7 +71,7 @@ function lib.get_value(parameter)
     
 end -- function get_value
 
-function lib.dez2hex(number)
+function lib.dec2hex(number)
     if(not number) then
         return 0
     
@@ -85,10 +86,10 @@ function lib.dez2hex(number)
         
     end -- if(not number
 
-end -- function dez2hex
+end -- function dec2hex
 
 function lib.bin2hex(number)
-   return lib.dez2hex(tonumber(number, 2))
+   return lib.dec2hex(tonumber(number, 2))
    
 end
 
@@ -102,7 +103,7 @@ function lib.convert_to_hex(cmd)
             second = lib.bin2hex(second)
             
     elseif(first ~= "$") then
-            second = lib.dez2hex(first .. second)
+            second = lib.dec2hex(first .. second)
 
     end -- if(first ==
     
@@ -195,7 +196,11 @@ function lib.check_idx(text)
     
 end
 
-        
+function evalStr(str)
+    local f= load ('return ('..str..')')
+    return f()
+end
+
 function lib.pass_1_only_cmd(cmd)
     table.insert(a.code, cmd[1])
     
@@ -219,7 +224,7 @@ function lib.pass_1(cmd)
         value = a.lib.bin2hex(value)
         
     elseif(not base) then
-        value = a.lib.dez2hex(value)
+        value = a.lib.dec2hex(value)
         
     end -- if(base
     
@@ -227,4 +232,3 @@ function lib.pass_1(cmd)
     table.insert(a.code, line)
     
 end -- function pass_1
-

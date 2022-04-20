@@ -2,7 +2,6 @@ local a = ass
 local l = logger
 local cname = "template"
 local code
-local pass_1
 
 a.registered_command[cname] = function(param)
             

@@ -64,3 +64,8 @@ noch_ein_label:
     txa
     txs
     tya
+    dc $00, $00, $00, $01, $1e, $ab, $fd, $ff
+    dc Dies ist ein Text:, 05, %1101
+    dc %1001, 20, 70, $ab, Das kommt auf den Bildschirm.
+    
+* = $2000

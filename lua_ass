@@ -21,6 +21,7 @@ ass.error = {}                                                                  
 
 ass.start = 0                                                                            -- Current Base to Calc, Command *
 ass.pc = 0                                                                               -- Current Adress of the Processorpointer
+ass.set_base = false                                                                     -- Is start or base (*) already set?
 ass.filename = ... or ""                                                                 -- Filename as Argument
 ass.debug = true                                                                         -- Error-Flag, true = all ok
 ass.current_line = 0                                                                     -- Current line to process
@@ -54,6 +55,7 @@ local commands = {
                     -- Special Assembler-Command
                     "cmd_star.lua",
                     "cmd_label.lua",
+                    "cmd_dc.lua",
                     
                     -- Commands with Pass 1
                     "cmd_lda.lua",
@@ -142,7 +144,7 @@ local lnumber = 0
 -- Read the source-code.
 for line in io.lines(a.filename) do
   lnumber = lnumber + 1
-  table.insert(a.source, string.lower(line))
+  table.insert(a.source, line)
 
 end
 
