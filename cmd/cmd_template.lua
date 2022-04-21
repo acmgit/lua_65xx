@@ -7,7 +7,7 @@ a.registered_command[cname] = function(param)
             
     local passes = {}
     
-    passes[1] = pass_1(cmd)
+    passes[1] = pass_1
     
     if(passes[a.pass]) then
         passes[a.pass](param)

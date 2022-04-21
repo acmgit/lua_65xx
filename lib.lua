@@ -199,6 +199,23 @@ end
 function evalStr(str)
     local f= load ('return ('..str..')')
     return f()
+    
+end
+
+function lib.print_code()
+    for k,v in pairs(a.code) do
+        print(v)
+        
+    end
+    
+end
+
+function lib.print_source()
+    for k,v in pairs(a.source) do
+        print(v)
+        
+    end
+    
 end
 
 function lib.pass_1_only_cmd(cmd)
@@ -206,7 +223,7 @@ function lib.pass_1_only_cmd(cmd)
     
 end
 
-function lib.pass_1(cmd)
+function lib.prepare_cmd(cmd)
     a.lib.check_flags(cmd[2])
     
     local flags = ""
@@ -231,4 +248,103 @@ function lib.pass_1(cmd)
     line = cmd[1] .. " " .. value .. " |" .. flags
     table.insert(a.code, line)
     
-end -- function pass_1
+end -- function prepare_command
+
+function lib.calc_label(cmd)
+    local line = a.source[a.current_line-1]
+    local value    
+    if(line:find("=")) then                                                              -- Label is a Deklaration
+        lval = line:match("[%$%%%dabcdef]+")
+        if (lval:sub(1,1) == "$") then                                                   -- is value hex
+                lval = lval:match("[^%$][%x]+")
+                
+        elseif (lval:sub(1,1) == "%") then                                                -- is value binary
+                lval = lval:match("[^%%][%w]+")
+                lval = a.lib.bin2hex(lval)
+                
+        else
+                lval = lval:match("%w")                                                   -- value is decimal
+                lval = a.lib.dec2hex(lval)
+                
+        end
+        
+        a.labels[cmd[1]] = "$" .. lval
+        
+    else
+        a.labels[cmd[1]] = a.pc
+        
+    end
+    a.code[#a.code+1] = " "
+    
+end
+
+function lib.calculate_dc(cmd)
+    local data = {}
+    local helpstring = ""
+    local line = ""
+    
+    helpstring = a.lib.trim(a.source[a.current_line])
+    helpstring = helpstring:sub(helpstring:find("dc")+3, helpstring:len())
+    
+    for word in string.gmatch(helpstring, "[^,]+[%w%$%%:]+") do
+        data[#data+1] = a.lib.trim(word)
+        
+    end
+    
+    for k,v in pairs(data) do
+        local x = ""
+        if(v:find(":")) then                                                             -- is it a label?
+            x = v
+            
+        elseif(v:find("%$")) then                                                        -- is it hex?
+            x = v:match("[^$]+[%x]+")
+            
+        elseif (v:find("%%")) then                                                       -- is it binary
+            x = a.lib.bin2hex(v:match("[^%%]+[%w]+"))
+            
+        elseif (tonumber(x)) then                                                        -- is it dec
+            x = a.lib.dec2hex(v)
+            
+        else                                                                             -- no, it's a string
+            for b=1, v:len() do
+                x = x .. a.lib.dec2hex(v:byte(b,b)) .. " "
+            
+            end
+            
+        end
+
+        line = line .. x .. " "
+    end
+    
+    table.insert(a.code, "dc " .. line)
+end
+
+function lib.check_dc_value(value)
+    if(value:find(":")) then                                                             -- is it a label?
+        return value
+        
+    elseif (value:find("$")) then                                                        -- is it hex?
+        return value:match("[^$]+[%x]+")
+
+    elseif (value:find("%")) then
+        return a.lib.bin2hex(value:match("[^%%]+[%w]+"))
+        
+    elseif (tonumber(value)) then
+        return a.lib.dec2hex(tonumber(value))
+        
+    else
+        return value
+        
+    end
+
+end
+
+function lib.check_declaration(cmd)
+    local line 
+    line = a.source[a.current_line]
+    
+    if(line:find("=")) then
+        print(line:match("[%$%%]"))
+    end
+end
+

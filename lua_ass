@@ -157,7 +157,7 @@ for i=1,#a.lib.parse do
   
   a.pass = i
   a.lib.parse[i]()
-  a.code = a.source
+  a.source = a.code
   
 --  for k,v in pairs(a.source) do
 --  print(v)
