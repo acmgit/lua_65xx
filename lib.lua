@@ -37,7 +37,7 @@ function lib.split(parameter)
         if(parameter == nil) then return end
                 
         lib.trim(parameter)
-        for word in string.gmatch(parameter, "[%w%-%:%%%(%)%,%*%#%$%=%.2f%_]+") do
+        for word in string.gmatch(parameter, "[%w#%$%%%*/%+%-%:%(%)$,%=%.2f%_]+") do
             word = word or nil
             lib.trim(word)
             table.insert(cmd, word)
@@ -59,12 +59,7 @@ end
 function lib.get_value(parameter)
     local value
     local base
-    
-    if(parameter:match("[%+%-%*/]")) then
-        l.log("Is Formula")
         
-    end
-    
     if(not parameter:find(":")) then
         value = string.match(parameter, "[%x]+")
         base = string.match(parameter, "[%$%%]")
@@ -77,6 +72,16 @@ function lib.get_value(parameter)
     return base, value
     
 end -- function get_value
+
+function lib.hex2dec(number)
+    return tonumber(number,16)
+
+end
+
+function lib.bin2dec(number)
+    return tonumber(number,2)
+    
+end
 
 function lib.dec2hex(number)
     if(not number) then
@@ -196,32 +201,88 @@ function lib.check_idx(text)
     
 end
 
-function evalStr(str)
+function lib.calc_formula(formula)
+local b = {}
+
+    for part in string.gmatch(formula,"[^#][%x%%%$]*[%+%-%*/]*") do
+        b[#b+1] = part:match("[%w%%%$]+")
+        b[#b+1] = part:match("[%+%-%*/]")
+    
+    end
+    
+    for k,v in pairs(b) do                                                               -- Calculate the Parts 
+        local digit
+        
+        digit = v:match("[%w%%%$]+")
+        if(digit) then
+            if(digit:sub(1,1) == "$") then
+                b[k] = tostring(lib.hex2dec(digit:sub(2)))
+                
+            elseif(digit:sub(1,1) == "%") then
+                b[k] = tostring(lib.bin2dec(digit:sub(2)))
+                
+            else
+                b[k] = digit
+                
+            end -- if(digit: 
+            
+        end -- if(digit
+        
+    end -- for k
+    
+    local form = ""
+    for k,v in pairs(b) do
+        form = form .. v
+        
+    end
+    
+    form = form:match("[%w%*/%-%+]+")
+    local result = lib.evalStr(form)
+    if(result < 0) then                                                                  -- if result = negativ, result + 255 = result - $ff
+        result = result + 255
+        
+    end
+    
+    return result
+        
+end -- lib.calc_formula
+
+function lib.evalStr(str)
     local f= load ('return ('..str..')')
     return f()
     
-end
+end -- lib.eval
+
+function lib.round(num) 
+    if num >= 0 then return math.floor(num+.5) 
+    else return math.ceil(num-.5) end
+    
+end -- lib.round
 
 function lib.print_code()
+    local line = 0
     for k,v in pairs(a.code) do
-        print(v)
+        line = line + 1
+        print(line .. ": " .. v)
         
     end
     
 end
 
 function lib.print_source()
+    local line = 0
     for k,v in pairs(a.source) do
-        print(v)
+        line = line + 1
+        print(line .. ": " .. v)
         
     end
     
-end
+end -- lib.print_source()
 
 function lib.pass_1_only_cmd(cmd)
     table.insert(a.code, cmd[1])
     
-end
+end -- function lib.pass_1_only
 
 function lib.prepare_cmd(cmd)
     a.lib.check_flags(cmd[2])
@@ -252,18 +313,30 @@ end -- function prepare_command
 
 function lib.calc_label(cmd)
     local line = a.source[a.current_line-1]
-    local value    
+    local value
+    local lval
+    
     if(line:find("=")) then                                                              -- Label is a Deklaration
-        lval = line:match("[%$%%%dabcdef]+")
+        value = line:find("=") + 1        
+        lval = line:sub(value)        
+        lval = lval:match("[%$%%%*/%+%-%w]+")
+        
         if (lval:sub(1,1) == "$") then                                                   -- is value hex
-                lval = lval:match("[^%$][%x]+")
+            lval = lval:match("[^%$][%x]+")
                 
-        elseif (lval:sub(1,1) == "%") then                                                -- is value binary
-                lval = lval:match("[^%%][%w]+")
-                lval = a.lib.bin2hex(lval)
+        elseif (lval:sub(1,1) == "%") then                                               -- is value binary
+            lval = lval:match("[^%%][%w]+")
+            lval = a.lib.bin2hex(lval)
                 
+        elseif(lval:match("[%*/%+%-]")) then
+                print("------")
+                print(lval)
+                lval = lib.calc_formula(lval)
+                
+                --lval = lib.calc_formula(lval)
+
         else
-                lval = lval:match("%w")                                                   -- value is decimal
+                lval = lval:match("%d")                                                  -- value is decimal                
                 lval = a.lib.dec2hex(lval)
                 
         end
@@ -317,7 +390,8 @@ function lib.calculate_dc(cmd)
     end
     
     table.insert(a.code, "dc " .. line)
-end
+    
+end -- function lib.calculate_dc
 
 function lib.check_dc_value(value)
     if(value:find(":")) then                                                             -- is it a label?
@@ -335,16 +409,19 @@ function lib.check_dc_value(value)
     else
         return value
         
-    end
+    end -- if(value:find(
 
-end
+end -- lib.check_dc_value
 
+--[[
 function lib.check_declaration(cmd)
     local line 
     line = a.source[a.current_line]
     
     if(line:find("=")) then
-        print(line:match("[%$%%]"))
-    end
+        print(line:match("[%$%%]+"))
+        
+    end -- if(line:find("="
+    
 end
-
+]]--
