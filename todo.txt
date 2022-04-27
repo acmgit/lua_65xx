@@ -4,5 +4,5 @@ checked:    dc to insert data in a code, like tables.
             ds to insert screencodes
             #include to insert other textpieces
             #incbin to include binary datas
-            calculate formulas in the code
+checked:    calculate formulas in the code
 checked:    calculate labels with an adress like label: = $ab1e

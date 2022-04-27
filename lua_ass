@@ -46,6 +46,7 @@ dofile("parser_6502.lua")
 
 local l = logger
 
+
 if(a.debug) then
   l.filename = a.filename .. ".log"
   l.open()
@@ -60,7 +61,7 @@ local commands = {
                     "cmd_label.lua",
                     "cmd_dc.lua",
                     
-                    -- Commands with Pass 1
+                    -- Official Assembler-Commands
                     "cmd_lda.lua",
                     "cmd_sta.lua",
                     "cmd_and.lua",
@@ -84,8 +85,6 @@ local commands = {
                     "cmd_jmp.lua",
                     "cmd_jsr.lua",
                     "cmd_bit.lua",
-                    
-                    -- Commands without Pass 1
                     "cmd_dex.lua",
                     "cmd_dey.lua",
                     "cmd_inx.lua",
@@ -111,8 +110,6 @@ local commands = {
                     "cmd_pha.lua",
                     "cmd_plp.lua",
                     "cmd_php.lua",
-                    
-                    -- Branch commands
                     "cmd_bpl.lua",
                     "cmd_bmi.lua",
                     "cmd_bvc.lua",

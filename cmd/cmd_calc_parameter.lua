@@ -106,7 +106,7 @@ function is_label(value)
     else
         val = val:byte(1)                                                                -- is char
         if(val) then
-            return val
+            return a.lib.dec2hex(val)
         
         else
             a.lib(write_error(06))
