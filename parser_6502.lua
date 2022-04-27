@@ -11,17 +11,57 @@
 local a = ass
 local l = logger
 local lib = a.lib
-local line
 
+-- Pass 1 only calculates all Values or Formulas to hex.
 lib.parse[1] = function()
     for k,v in pairs(a.source) do
         a.current_line = a.current_line + 1
+        --local line = ""
+    
+        comment = string.find(v, ";")                                                    -- Remove the comment
+        if(comment) then                                                                 -- Comment found
+            v = string.sub(v,1,comment)                                                  -- Extract it from the Code.
+            
+        end -- if(comment
         
-        comment = string.find(v, ";")
-        if(comment) then                                                                -- Comment found
-            v = string.sub(v,1,comment)                                                 -- Extract it from the Code.
+        local cmd = lib.split(v)
+        local helpcmd = cmd[1] or ""
+        helpcmd = helpcmd:lower()
+        helpcmd = lib.trim(helpcmd)
+        
+        if(cmd[1] or nil) then
+            
+            if(a.registered_command[helpcmd]) then
+                a.registered_command[helpcmd](cmd)                                -- Valid cmd found
+            
+            else
+                if(cmd[1]:find(":")) then                                                -- Line is a Lable
+                    a.registered_command["label"](cmd)
+
+                else                                                                     -- no valid cmd found
+                    lib.write_error(02)
+                    table.insert(a.code, v)
+                    
+                end -- if(cmd[1
+                
+            end -- if(a.registered_command
+            
+        else -- if(cmd[1
+            table.insert(a.code, " ")
             
         end
+        
+    end -- for k,v
+    a.current_line = 0
+    lib.print_code()
+    
+end -- parse[1]
+
+--[[    
+lib.parse[2] = function()
+    for k,v in pairs(a.source) do
+        a.current_line = a.current_line + 1
+        
         
         local cmd = lib.split(v)                                                         -- Split the command
         print(a.current_line .. ": " .. (cmd[1] or "") .. " " .. (cmd[2] or ""))
@@ -30,30 +70,34 @@ lib.parse[1] = function()
             break                                                                        -- next Command
             
         else                                                                             -- Ok, cmd is valid
-            for k,v in pairs(cmd) do                                                     -- Clean Command and Parameters
-                if(v:match("[%*/%+%-]")) then                                            -- check * / + - in v
-                        if(v:len() > 1) then                                             -- Ok, It's not the star-command
-                            v = lib.calc_formula(v)
+            for b,e in pairs(cmd) do                                                     -- Clean Command and Parameters
+                if(e:match("[%*/%+%-]")) then                                            -- check * / + - in v
+                    if(e:len() > 1) then                                             -- Ok, It's not the star-command
+                        if(e:sub(1,1)) == "#" then
+                            e = "#" .. lib.dec2hex(lib.calc_formula(e:sub(2)))
+                        else
+                            e = lib.dec2hex(lib.calc_formula(e))
+                            
+                        end -- if(v:sub(
                         
-                        end
+                        cmd[b] = e
                         
-                end
-                
-                line = line .. (v or "") .. " "
-                
+                    end -- if(v:len
+                        
+                end -- if(v:match
+                                
             end -- for k,v
                         
         end -- if(not cmd
-               
+        
         local helpcmd = cmd[1]
         if(helpcmd) then
-            string.lower(helpcmd)
+            helpcmd = string.lower(helpcmd)
             
         end
         
         if(a.registered_command[helpcmd]) then
-            string.lower(cmd[1])
-            a.registered_command[cmd[1]](cmd)
+            a.registered_command[helpcmd](cmd)
             
         else
             
@@ -80,7 +124,7 @@ lib.parse[1] = function()
     
 end -- function a.parse[1]
 
-lib.parse[2] = function()
+lib.parse[3] = function()
     a.current_line = 1
     a.code = {}
     line = ""
@@ -100,13 +144,7 @@ lib.parse[2] = function()
         end
     end -- for k,v
     
-    print("Labels are:")
-    
-    for k,v in pairs(a.labels) do
-        print(k .. "\t.......... \t\t" .. v)
-    
-    end -- for k,v in pairs(labels
-    
     lib.print_code()
     
 end -- function lib.parse[2
+]]--

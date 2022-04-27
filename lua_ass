@@ -20,6 +20,7 @@ ass.registered_command = {}                                                     
 ass.error = {}                                                                           -- Reports with Number. 0 = Ok.
 
 ass.start = 0                                                                            -- Current Base to Calc, Command *
+ass.last = 0                                                                              -- Codeend
 ass.pc = 0                                                                               -- Current Adress of the Processorpointer
 ass.set_base = false                                                                     -- Is start or base (*) already set?
 ass.filename = ... or ""                                                                 -- Filename as Argument
@@ -53,6 +54,7 @@ end -- if(a.debug)
 l.log("Try to load commands.")
 local commands = {
                     -- Special Assembler-Command
+                    "cmd_calc_parameter.lua",
                     "cmd_star.lua",
                     "cmd_label.lua",
                     "cmd_dc.lua",
@@ -149,9 +151,13 @@ for line in io.lines(a.filename) do
 end
 
 file:close()
+os.execute("clear")
+-- change this in "cls" if you're in Windows
+
+a.lib.print_source()
 
 for i=1,#a.lib.parse do
-
+  
   print("Assembling Pass " .. i)
   l.log("Assembling Pass " .. i)
   
@@ -170,12 +176,7 @@ for i=1,#a.lib.parse do
   end
 
   a.source = a.code
-
-  
---  for k,v in pairs(a.source) do
---  print(v)
-  
---  end -- for k,v
   
 end -- for i=
 
+a.lib.report()
