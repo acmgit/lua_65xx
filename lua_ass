@@ -18,8 +18,10 @@ ass.lib = {}                                                                    
 ass.lib.parse = {}                                                                       -- The Steps to Pass
 ass.registered_command = {}                                                              -- Command the Assembler knows
 ass.error = {}                                                                           -- Reports with Number. 0 = Ok.
-
+ass.pre = {}                                                                             -- Save the presigns
+ass.post = {}                                                                            -- Save the postsigns
 ass.start = 0                                                                            -- Current Base to Calc, Command *
+ass.last = 0                                                                              -- Codeend
 ass.pc = 0                                                                               -- Current Adress of the Processorpointer
 ass.set_base = false                                                                     -- Is start or base (*) already set?
 ass.filename = ... or ""                                                                 -- Filename as Argument
@@ -44,6 +46,7 @@ dofile("parser_6502.lua")
 
 local l = logger
 
+
 if(a.debug) then
   l.filename = a.filename .. ".log"
   l.open()
@@ -53,11 +56,12 @@ end -- if(a.debug)
 l.log("Try to load commands.")
 local commands = {
                     -- Special Assembler-Command
+                    "cmd_calc_parameter.lua",
                     "cmd_star.lua",
                     "cmd_label.lua",
                     "cmd_dc.lua",
                     
-                    -- Commands with Pass 1
+                    -- Official Assembler-Commands
                     "cmd_lda.lua",
                     "cmd_sta.lua",
                     "cmd_and.lua",
@@ -81,8 +85,6 @@ local commands = {
                     "cmd_jmp.lua",
                     "cmd_jsr.lua",
                     "cmd_bit.lua",
-                    
-                    -- Commands without Pass 1
                     "cmd_dex.lua",
                     "cmd_dey.lua",
                     "cmd_inx.lua",
@@ -108,8 +110,6 @@ local commands = {
                     "cmd_pha.lua",
                     "cmd_plp.lua",
                     "cmd_php.lua",
-                    
-                    -- Branch commands
                     "cmd_bpl.lua",
                     "cmd_bmi.lua",
                     "cmd_bvc.lua",
@@ -149,9 +149,13 @@ for line in io.lines(a.filename) do
 end
 
 file:close()
+os.execute("clear")
+-- change this in "cls" if you're in Windows
+
+a.lib.print_source()
 
 for i=1,#a.lib.parse do
-
+  
   print("Assembling Pass " .. i)
   l.log("Assembling Pass " .. i)
   
@@ -170,12 +174,7 @@ for i=1,#a.lib.parse do
   end
 
   a.source = a.code
-
-  
---  for k,v in pairs(a.source) do
---  print(v)
-  
---  end -- for k,v
   
 end -- for i=
 
+a.lib.report()

@@ -4,12 +4,13 @@
 ; **                                      **
 ; ******************************************
 
-print:  =   $ab1e
-result: =   25*$3
-test:   =   6
-test2:  =   %11011
-
 * = $0801                                       ; Start of Basicram
+
+print:  =   $ab1e
+result: =   {25*$3}
+test:   =   34
+test2:  =   %11011
+test3:  =   {25 + 3 * %1101 - $5}
 
     adc #15
     and 2763,y
@@ -30,21 +31,21 @@ test_label_05:
     cli
     clv
     cmp #03
-    cpx #20
-    lda #test_label_05:
+    cpx #[a]
+    lda #[test_label_05:]
     cpy #20
     dec (05),x
     dex
     dey
-    eor #63+$af+%11
+    eor #{63+$af+%11}
     inc (05),y
     inx
     iny
     jmp (2763)
     jsr 2763
     lda 60
-    ldx 2763 * 5 / 7
-    ldy #$65+3*%1100/10                         ; Formula
+    ldx {2763 * 5 / 7}
+    ldy #{$65+3*%1100/10}                         ; Formula
     lsr 6330
     nop
     ora #$55
@@ -56,7 +57,7 @@ noch_ein_label:
     rol 6345
     ror 6345
     rti
-    rts #3-5
+    rts #{3-5}
     sbc #%11001100
     sec
     sei
@@ -70,6 +71,6 @@ noch_ein_label:
     txs
     tya
     dc $00, $00, $00, $01, $1e, $ab, $fd, $ff
-    dc Dies ist ein Text:, 05, %1101
-    dc %1001, 20, 70, $ab, Das kommt auf den Bildschirm.
-    dc 5*3+4-%1101, 2, 67, $ff
+    dc [Dies ist ein Label:], 05, %1101
+    dc %1001, 20, 70, $ab, [Das kommt auf den Bildschirm.]
+    dc {5*3+4-%1101}, 2, 67, $ff

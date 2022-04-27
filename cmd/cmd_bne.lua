@@ -3,13 +3,12 @@ local l = logger
 local cname = "bne"
 local code = "d0"
 
-local pass_1
 
 a.registered_command[cname] = function(param)
             
     local passes = {}
     
-    passes[1] = a.lib.prepare_cmd
+    passes[1] = a.registered_command["calc_parameter"]
 
     if(passes[a.pass]) then
         passes[a.pass](param)                                                            -- Call the Function of the Pass
