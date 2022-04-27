@@ -18,7 +18,7 @@ lib.error = {
             }
 
 function lib.write_error(number)
-    print("Line " .. a.current_line .. ": " .. number .. ": " .. lib.error[number])
+    print("Line " .. a.current_line .. ": (" .. number .. ") " .. lib.error[number])
     if(number > 0) then
         a.debug = false
         
@@ -40,7 +40,7 @@ function lib.split(parameter)
         if(parameter == nil) then return end
                 
         lib.trim(parameter)
-        for word in string.gmatch(parameter, "[%w#%$%%%*/%+%-%:%(%)$,%=%.2f%_]+") do
+        for word in string.gmatch(parameter, "[%w#%$%%%*/%+%-%:%(%)$,%[%]{}%=%.2f%_]+") do
             word = word or nil
             lib.trim(word)
             table.insert(cmd, word)

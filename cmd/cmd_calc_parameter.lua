@@ -2,34 +2,118 @@ local a = ass
 local l = logger
 local cname = "calc_parameter"
 local code
+local is_dec
+local is_formula
+local is_binary
+local is_hex
+local is_label
+
+local cmd = {}
 
 a.registered_command[cname] = function(param)
-    local parameter = nil
+    local parameter = ""
     local line = param[1] .. " "
+    local pre_line                                                                       -- Hold the signs BEFORE the number
+    local post_line                                                                      -- Hold the signs AFTER the number
+    local value = nil
+    
+    cmd["{"] = is_formula
+    cmd["["] = is_label
+    cmd["%"] = is_binary
+    cmd["$"] = is_hex
     
     for k = 2, #param do
-        parameter = param[k]
+        if(k) then
+            parameter = parameter .. param[k]
+        
+        end
         
     end
+
+
+    pre_line = (parameter:match("[^%w{%[,%*/%+%-{}%%%$%,xy]+") or "")
+    post_line = (parameter:match("[^%dabcdef%]}]+[),xy]") or "")
+    value = (parameter:match("[%wf%[%]%{%}%*/%+%-%s%%%$]+") or "")
+
+    a.pre[a.current_line] = pre_line
+    a.post[a.current_line] = post_line
     
-    if(not parameter) then                                                               -- Code has no Parameter
-        table.insert(a.code, line)
-        return
+    
+    if(not value:sub(1,1) or (value:sub(1,1) == "")) then 
         
-    elseif(parameter:sub(1,1) == "#") then                                                -- Paramter starts with #
-        line = line .. "#"
-        parameter = parameter:sub(2,parameter:len())                                       -- new Parameter w/o #
+        if(line) then
+            table.insert(a.code, line)
+            
+        else
+            table.insert(a.code, " ")
+            
+        end
+        return 
+    
+    end -- if(not value
         
-    end
+    if(cmd[value:sub(1,1)]) then
+        value = cmd[value:sub(1,1)](value)
+        
+    else
+        if(tonumber(value)) then
+            value = is_dec(value)
+            
+        else
+            a.lib.write_error(06)
+            value = " "
+        
+        end
     
-    if(parameter:match("[%*/%+%-]")) then                                                 -- Parameter is a Formula
-        parameter = "$" .. a.lib.dec2hex(a.lib.calc_formula(parameter))
+    end -- if(not value
     
-    else 
-        parameter = a.lib.convert_to_hex(parameter)
-    
-    end
-    
-    table.insert(a.code, line .. parameter)
+    table.insert(a.code, line .. a.pre[a.current_line] .. (value or "") .. a.post[a.current_line])
     
 end
+
+function is_dec(value)
+        return a.lib.dec2hex(value)
+    
+end -- is_dec
+
+function is_hex(value)
+    local val = value:match("[^%$][%x]+")
+    return val
+        
+end -- is_hex
+
+function is_binary(value)
+    local val = value:match("[^%%][%d]+")
+    
+    return a.lib.bin2hex(val)
+            
+end
+
+function is_formula(value)
+    local val = value:match("[^{}]+")
+    val = a.lib.calc_formula(val)
+    val = a.lib.dec2hex(val)
+    return val
+end
+
+function is_label(value)
+    local val = value:match("[^%[%]]+")
+    local lab = val:sub(-1,-1)
+    
+    if(lab == ":") then
+        return value                                                                     -- is Label 
+        
+    else
+        val = val:byte(1)                                                                -- is char
+        if(val) then
+            return val
+        
+        else
+            a.lib(write_error(06))
+            return value
+        
+        end -- if(val)
+        
+    end -- if(value:sub
+
+end -- function is_label

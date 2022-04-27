@@ -37,7 +37,7 @@ lib.parse[1] = function()
             else
                 if(cmd[1]:find(":")) then                                                -- Line is a Lable
                     a.registered_command["label"](cmd)
-
+                    
                 else                                                                     -- no valid cmd found
                     lib.write_error(02)
                     table.insert(a.code, v)

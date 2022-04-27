@@ -32,7 +32,7 @@ test_label_05:
     clv
     cmp #03
     cpx #[a]
-    lda #test_label_05:
+    lda #[test_label_05:]
     cpy #20
     dec (05),x
     dex

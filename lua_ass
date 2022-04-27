@@ -18,7 +18,8 @@ ass.lib = {}                                                                    
 ass.lib.parse = {}                                                                       -- The Steps to Pass
 ass.registered_command = {}                                                              -- Command the Assembler knows
 ass.error = {}                                                                           -- Reports with Number. 0 = Ok.
-
+ass.pre = {}                                                                             -- Save the presigns
+ass.post = {}                                                                            -- Save the postsigns
 ass.start = 0                                                                            -- Current Base to Calc, Command *
 ass.last = 0                                                                              -- Codeend
 ass.pc = 0                                                                               -- Current Adress of the Processorpointer
