@@ -31,8 +31,8 @@ a.registered_command[cname] = function(param)
     end
 
 
-    pre_line = (parameter:match("[^%w{%[,%*/%+%-{}%%%$%,xy]+") or "")
-    post_line = (parameter:match("[^%dabcdef%]}]+[),xy]") or "")
+    pre_line = (parameter:match("[^%w{}%[,%*/%+%-%%%$%,xy]+") or "")
+    post_line = (parameter:match("[^%dabcdef%]}]+[%),xy]+") or "")
     value = (parameter:match("[%wf%[%]%{%}%*/%+%-%s%%%$]+") or "")
 
     a.pre[a.current_line] = pre_line
@@ -67,7 +67,7 @@ a.registered_command[cname] = function(param)
     
     end -- if(not value
     
-    table.insert(a.code, line .. a.pre[a.current_line] .. (value or "") .. a.post[a.current_line])
+    table.insert(a.code, line .. (value or ""))
     
 end
 

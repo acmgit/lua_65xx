@@ -56,7 +56,9 @@ end -- if(a.debug)
 l.log("Try to load commands.")
 local commands = {
                     -- Special Assembler-Command
+                    "cmd_do_nothing.lua",
                     "cmd_calc_parameter.lua",
+                    "cmd_turn_value.lua",
                     "cmd_star.lua",
                     "cmd_label.lua",
                     "cmd_dc.lua",
@@ -155,6 +157,7 @@ os.execute("clear")
 a.lib.print_source()
 
 for i=1,#a.lib.parse do
+  a.code = {}
   
   print("Assembling Pass " .. i)
   l.log("Assembling Pass " .. i)
@@ -173,8 +176,12 @@ for i=1,#a.lib.parse do
       l.log("Pass " .. a.pass .. " finished without Errors.")
   end
 
-  a.source = a.code
-  
+  a.source = {}
+  a.source = a.code 
+  a.current_line = 0
+  a.lib.print_source()
+
 end -- for i=
+
 
 a.lib.report()

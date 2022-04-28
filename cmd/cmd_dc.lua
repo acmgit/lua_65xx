@@ -17,6 +17,7 @@ a.registered_command[cname] = function()
     local passes = {}
     
     passes[1] = calculate_dc
+    passes[2] = a.registered_command["do_nothing"]
     
     if(passes[a.pass]) then
         passes[a.pass]()
