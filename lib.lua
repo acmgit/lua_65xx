@@ -14,6 +14,7 @@ lib.error = {
               "Base error, * is twice in the code.",                                     -- 04
               "Illegal Labeldefinition found.",                                          -- 05
               "Illegal value found.",                                                    -- 06
+              "Unkown Label found.",                                                     -- 07
               
             }
 
@@ -40,7 +41,7 @@ function lib.split(parameter)
         if(parameter == nil) then return end
                 
         lib.trim(parameter)
-        for word in string.gmatch(parameter, "[%w#%$%%%*/%+%-%:%(%),%[%]{}%=%.2f%_]+") do
+        for word in string.gmatch(parameter, "[%w#%$%%%*/%+%-%:%(%),%[%]{}%=%.2f%_<>]+") do
             word = word or nil
             lib.trim(word)
             table.insert(cmd, word)

@@ -55,7 +55,7 @@ lib.parse[1] = function()
 end -- parse[1]
 
 lib.parse[2] = function()
-    for k,v in ipairs(a.source) do
+    for k,v in pairs(a.source) do
         a.current_line = k    
                 
         local cmd = lib.split(v)
@@ -125,3 +125,77 @@ lib.parse[3] = function ()
     
 end -- lib.parse[3]
 
+lib.parse[4] = function ()
+    local cmd = {}
+
+    for k,v in pairs(a.source) do
+        a.current_line = k
+        
+        local cmd = a.source[k]:sub(1,3)
+        local line
+        line = a.source[k]:sub(5, -1)
+        local data = {}
+        local pre = a.pre[k] or ""
+        
+        for x in line:gmatch("[^%[%]]+[%x]-") do
+            table.insert(data,x)
+        
+        end
+        
+        line = ""
+        for x, w in pairs(data) do
+            local h = a.lib.trim(w)
+            
+            if(h:find(":", h:len(h)))then
+                w = a.lib.trim(w)
+                lab = a.labels[w]
+                
+                if(not lab) then
+                    a.lib.write_error(07)
+                    line = line .. w 
+                    
+                elseif(lab:len() > 2) then
+                    if(pre:find("#",1,pre:len())) then
+                        a.lib.write_error(03)
+                        line = line .. w
+                        
+                    elseif(cmd == "dc ") then
+                        a.lib.write_error(03)
+                        line = line .. w
+                        
+                    else
+                        line = line .. lab:sub(-2) .. " "
+                        line = line .. lab:sub(1,2) .. " "
+                    
+                    end -- if(a.pre
+                
+                else
+                    line = line .. lab
+                    
+                end -- if(not
+                
+            else
+                    line = line .. w
+                    
+            end -- if(h:find
+            
+        end -- for x,
+        
+        table.insert(a.code, a.source[k]:sub(1,4) .. line)
+        
+    end -- for k,v
+    
+    for k,v in pairs(a.code) do
+        a.current_line = k
+        
+        local line = a.code[k]
+        local cmd = line:match("[%w]+")
+        if(cmd) then
+            a.registered_command[cmd]()
+            
+        end
+        
+    end
+    
+end -- lib.parse[4]
+        

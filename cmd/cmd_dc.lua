@@ -20,6 +20,7 @@ a.registered_command[cname] = function()
     passes[1] = calculate_dc
     passes[2] = a.registered_command["do_nothing"]
     passes[3] = a.registered_command["do_nothing"]
+    passes[4] = function() return end
     
     if(passes[a.pass]) then
         passes[a.pass]()

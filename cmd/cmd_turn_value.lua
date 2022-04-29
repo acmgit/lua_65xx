@@ -24,17 +24,26 @@ a.registered_command[cname] = function(param)
     if(len > 2) then
         local hi = value:sub(1,2)
         local lo = value:sub(-2)
-        local pre = a.pre[a.current_line]
+        local pre = a.pre[a.current_line] or ""
         local dec = a.lib.hex2dec(value)
-        
-        
+                
         if(dec <= 255) then
             line = cmd[1] .. lo
             
         else
-            if(not pre:find("#")) then
+            if(not pre:find("#",1,pre:len())) then
                 line = cmd[1] .. " " .. lo .. " " .. hi
                 
+            elseif(pre:find(">",1,pre:len())) then
+                line = cmd[1] .. " " .. hi
+                pre = pre:match("[^<>]+")
+                a.pre = pre
+                
+            elseif(pre:find("<",1,pre:len())) then
+                line = cmd[1] .. " " .. lo
+                pre = pre:match("[^<>]+")
+                a.pre = pre                
+            
             else
                 a.lib.write_error(03)
                 line = a.source[a.current_line]

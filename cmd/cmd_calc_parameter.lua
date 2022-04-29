@@ -28,15 +28,14 @@ a.registered_command[cname] = function(param)
         end
         
     end
-
-    pre_line = (parameter:match("[^%w{}%[,%*/%+%-%%%$%,xy]+") or "")
+    
+    pre_line = (parameter:match("[^%w{}%[,%*/%+%-%%%$%,xy<>]+[<>]+") or "")
     post_line = (parameter:match("[^%dabcdef%]}]+[%),xy]+") or "")
     value = (parameter:match("[%w%[%]%{%}%*/%+%-%s%%%$_:]+") or "")
-    
+                
     a.pre[a.current_line] = pre_line
     a.post[a.current_line] = post_line
-    
-    
+        
     if(not value:sub(1,1) or (value:sub(1,1) == "")) then 
         
         if(line) then

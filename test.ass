@@ -16,7 +16,7 @@ test3:  =   {25 + 3 * %1101 - $5}
     and 2763,y
     asl #63
     bcc 2763
-    bcs 2763                                    ; This is a comment ...
+    bcs [print:]                                    ; This is a comment ...
     beq 2763
     bit #1
     bmi 2763
@@ -32,7 +32,7 @@ test_label_05:
     clv
     cmp #03
     cpx #[a]
-    lda #[test_label_05:]
+    lda #[test:]
     cpy #20
     dec (05),x
     dex
@@ -42,9 +42,9 @@ test_label_05:
     inx
     iny
     jmp (2763)
-    jsr 2763
+    jsr [print:]
     lda 60
-    ldx {2763 * 5 / 7}
+    ldx #>$ab1e
     ldy #{$65+3*%1100/10}                         ; Formula
     lsr 6330
     nop
@@ -71,7 +71,7 @@ noch_ein_label:
     txs
     tya
     dc $00, $00, $00, $01, $1e, $ab, $fd, $ff
-    dc [Dies ist ein Label:], 05, %1101
+    dc [result:], 05, %1101
     dc %1001, 20, 70, $ab, [Das kommt auf den Bildschirm.]
     dc {5*3+4-%1101}, 2, 67, $ff
-    dc 5, -$3, [Label 1:], [Label 2:]
+    dc 5, -$3, 73, 21
