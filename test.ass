@@ -74,3 +74,4 @@ noch_ein_label:
     dc [Dies ist ein Label:], 05, %1101
     dc %1001, 20, 70, $ab, [Das kommt auf den Bildschirm.]
     dc {5*3+4-%1101}, 2, 67, $ff
+    dc 5, -$3, [Label 1:], [Label 2:]

@@ -11,6 +11,7 @@ local bin
 local char 
 local calc_label
 local deflabel
+local get_label_adress
 
 a.registered_command[cname] = function(param)
             

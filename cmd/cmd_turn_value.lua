@@ -7,6 +7,11 @@ a.registered_command[cname] = function(param)
     local line = a.source[a.current_line]
     local value
     local cmd = {}
+
+    if(line:find(":")) then                                                              -- Value is a Label
+        table.insert(a.code, line)
+        return
+    end
     
     cmd = a.lib.split(line)
     
@@ -14,12 +19,15 @@ a.registered_command[cname] = function(param)
     value = value:match("[^%s]+[%x]+")
     local len = value:len()
     
+
+    
     if(len > 2) then
         local hi = value:sub(1,2)
         local lo = value:sub(-2)
         local pre = a.pre[a.current_line]
         local dec = a.lib.hex2dec(value)
-                
+        
+        
         if(dec <= 255) then
             line = cmd[1] .. lo
             

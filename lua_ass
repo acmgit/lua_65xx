@@ -20,6 +20,7 @@ ass.registered_command = {}                                                     
 ass.error = {}                                                                           -- Reports with Number. 0 = Ok.
 ass.pre = {}                                                                             -- Save the presigns
 ass.post = {}                                                                            -- Save the postsigns
+ass.adress = {}
 ass.start = 0                                                                            -- Current Base to Calc, Command *
 ass.last = 0                                                                              -- Codeend
 ass.pc = 0                                                                               -- Current Adress of the Processorpointer
@@ -58,6 +59,7 @@ local commands = {
                     -- Special Assembler-Command
                     "cmd_do_nothing.lua",
                     "cmd_calc_parameter.lua",
+                    "cmd_calc_branch.lua",
                     "cmd_turn_value.lua",
                     "cmd_star.lua",
                     "cmd_label.lua",
@@ -154,7 +156,7 @@ file:close()
 os.execute("clear")
 -- change this in "cls" if you're in Windows
 
-a.lib.print_source()
+a.lib.print_code(a.source)
 
 for i=1,#a.lib.parse do
   a.code = {}
@@ -171,17 +173,17 @@ for i=1,#a.lib.parse do
       os.exit()
         
   else
-      print(a.lib.error[0])
+      a.lib.write_error(0)
       print("Pass " .. a.pass .. " finished without Errors.\n")
       l.log("Pass " .. a.pass .. " finished without Errors.")
   end
 
+  a.lib.print_code(a.code)
+  
   a.source = {}
   a.source = a.code 
   a.current_line = 0
-  a.lib.print_source()
-
+  
 end -- for i=
-
 
 a.lib.report()

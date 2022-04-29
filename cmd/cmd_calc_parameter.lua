@@ -1,7 +1,6 @@
 local a = ass
 local l = logger
 local cname = "calc_parameter"
-local code
 local is_dec
 local is_formula
 local is_binary
@@ -30,11 +29,10 @@ a.registered_command[cname] = function(param)
         
     end
 
-
     pre_line = (parameter:match("[^%w{}%[,%*/%+%-%%%$%,xy]+") or "")
     post_line = (parameter:match("[^%dabcdef%]}]+[%),xy]+") or "")
-    value = (parameter:match("[%wf%[%]%{%}%*/%+%-%s%%%$]+") or "")
-
+    value = (parameter:match("[%w%[%]%{%}%*/%+%-%s%%%$_:]+") or "")
+    
     a.pre[a.current_line] = pre_line
     a.post[a.current_line] = post_line
     
@@ -97,7 +95,7 @@ function is_formula(value)
 end
 
 function is_label(value)
-    local val = value:match("[^%[%]]+")
+   local val = value:match("[^%[%]#%$%%]+")
     local lab = val:sub(-1,-1)
     
     if(lab == ":") then

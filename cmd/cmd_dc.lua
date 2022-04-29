@@ -9,6 +9,7 @@ local check_label
 local formula
 local hex
 local bin 
+local negativ
 
 local cmd = {}
                 
@@ -18,13 +19,14 @@ a.registered_command[cname] = function()
     
     passes[1] = calculate_dc
     passes[2] = a.registered_command["do_nothing"]
+    passes[3] = a.registered_command["do_nothing"]
     
     if(passes[a.pass]) then
         passes[a.pass]()
             
     end
     
-end
+end -- function a.registered_command
                 
 function calculate_dc()
     local data = {}
@@ -36,17 +38,18 @@ function calculate_dc()
     cmd["#"] = a.lib.dec2hex
     cmd["["] = check_label
     cmd["{"] = formula
+    cmd["-"] = negativ
     
     helpstring = a.lib.trim(a.source[a.current_line])
-    helpstring = helpstring:sub(helpstring:find("dc")+3, helpstring:len())
+    helpstring = helpstring:sub(helpstring:find("dc")+2, helpstring:len())
         
-    for word in string.gmatch(helpstring, "[^,]+[%w%$%%:%[%]%{%}]+") do
+    for word in string.gmatch(helpstring, "[^,]+[(.)%w%$%%:%[%]%{%}]+") do
         data[#data+1] = word
         
     end -- for word in
         
     for k,v in pairs(data) do
-        local command = ""
+        local command = ""        
         command = v:match("[^%s]+")
         command = command:sub(1,1)
         
@@ -56,7 +59,7 @@ function calculate_dc()
         end -- if(tonumber
         
         if(cmd[command]) then
-            line = line .. cmd[command](v) .. " "
+            line = line .. (cmd[command](v) or "") .. " "
             
         else
             a.lib.write_error(06)
@@ -68,8 +71,8 @@ function calculate_dc()
     
     line = "dc " .. line    
     table.insert(a.code, line)
-
-end
+    
+end -- function calculate_dc
 
 function hex(text)
     text = text:match("[^%s%$]+")
@@ -83,6 +86,22 @@ function bin(text)
     return line
     
 end -- bin(text)
+
+function negativ(text)
+    text = text:match("[^%-%s][%w]")
+    local pre = text:sub(1,1)
+    if(cmd[pre]) then
+        text = cmd[pre](text)
+        a.lib.hex2dec(text)
+        
+    end
+
+    text = 255 - text
+    text = a.lib.dec2hex(text)
+    
+    return text
+    
+end -- function negativ
 
 function check_label(text)
     
@@ -106,7 +125,7 @@ function formula(text)
     line = a.lib.dec2hex(a.lib.calc_formula(line))
     return line
     
-end
+end -- function formula
 
 function convert_text(text)
     local line = ""
@@ -118,7 +137,7 @@ function convert_text(text)
     line = a.lib.trim(line)
     return line
    
-end
+end -- function convert_text
 
     
         

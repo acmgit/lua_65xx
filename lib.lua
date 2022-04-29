@@ -40,7 +40,7 @@ function lib.split(parameter)
         if(parameter == nil) then return end
                 
         lib.trim(parameter)
-        for word in string.gmatch(parameter, "[%w#%$%%%*/%+%-%:%(%)$,%[%]{}%=%.2f%_]+") do
+        for word in string.gmatch(parameter, "[%w#%$%%%*/%+%-%:%(%),%[%]{}%=%.2f%_]+") do
             word = word or nil
             lib.trim(word)
             table.insert(cmd, word)
@@ -254,38 +254,46 @@ function lib.round(num)
     
 end -- lib.round
 
-function lib.print_code()
-    local line = 0
-    for k,v in pairs(a.code) do
-        line = line + 1
-        print(line .. ": " .. v)
-        
-    end
+function lib.calc_adress(line)
+    local value = a.lib.hex2dec(a.pc)
+    a.adress[a.current_line] = a.pc
+    value = value + (a.lib.round(line:len()/3))
+    value = a.lib.dec2hex(value)
+    a.pc = value
     
 end
 
-function lib.print_source()
-    local line = 0
-    for k,v in pairs(a.source) do
-        line = line + 1
-        print(line .. ": " .. v)
-        
-    end
+function lib.print_code(codebase)
+    local index = ""
     
-end -- lib.print_source()
+    for k,v in pairs(codebase) do
+        index = a.adress[k]
+
+        if(index) then
+            print(k .. ": $" .. index .. ": " .. v)
+            
+        else
+            print(k .. ": " .. v)
+            
+        end -- if(index - Adresses available
+        
+    end -- for k,v in
+    
+end -- print_code
 
 function lib.report()
 
     print("------<<<<<<[ Report ]>>>>>>------\n")
     print("Filenmae           = " .. a.filename)
     print("Code starts at     = $" .. a.start)
-    print("Code ends at       = $" .. a.last .. "\n")
+    print("Code ends at       = $" .. (a.adress[#a.adress] or 0))
+    print("Number of Lines    = " .. #a.adress .. "\n")
     print("Labels are:")
     for k,v in pairs(a.labels) do
         print("--------------------------------------------------------------------------------------")
         print("\27[1A" .. k .."\27[80G" .. "$" .. v)
         
-    end
+    end -- for k,v in
 
-end
+end -- function lib.report
     
