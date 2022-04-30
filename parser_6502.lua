@@ -185,13 +185,21 @@ lib.parse[4] = function ()
         
     end -- for k,v
     
-    for k,v in pairs(a.code) do
+    a.source = {}
+    a.source = a.code
+    a.code = {}
+    
+    for k,v in pairs(a.source) do
         a.current_line = k
         
-        local line = a.code[k]
+        local line = a.source[k]
         local cmd = line:match("[%w]+")
+        
         if(cmd) then
             a.registered_command[cmd]()
+            
+        else
+            table.insert(a.code, a.source[k])
             
         end
         

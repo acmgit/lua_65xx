@@ -15,16 +15,16 @@ test3:  =   {25 + 3 * %1101 - $5}
     adc #15
     and 2763,y
     asl #63
-    bcc 2763
-    bcs [print:]                                    ; This is a comment ...
-    beq 2763
+    bcc $0880
+    bcs $088b                                    ; This is a comment ...
+    beq $0803
     bit #1
-    bmi 2763
-    bne 2763,x
-    bpl 2763
+    bmi [test_label_05:]
+    bne $0860,x
+    bpl $0880
     brk
-    bvc 2763
-    bvs 2763
+    bvc $0805
+    bvs $0807
 test_label_05:
     clc
     cld

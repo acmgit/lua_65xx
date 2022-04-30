@@ -15,6 +15,7 @@ lib.error = {
               "Illegal Labeldefinition found.",                                          -- 05
               "Illegal value found.",                                                    -- 06
               "Unkown Label found.",                                                     -- 07
+              "Branch out of Range.",                                                    -- 08
               
             }
 
