@@ -1,7 +1,20 @@
 local a = ass
 local l = logger
 local cname = "rol"
-local code
+local mode = {
+                ["imp"] = "2a",
+                ["imm"] = nil,
+                ["zp"]  = "26",
+                ["zpx"] = "36",
+                ["zpy"] = nil,
+                ["izx"] = nil,
+                ["izy"] = nil,
+                ["abs"] = "2e",
+                ["abx"] = "3e",
+                ["aby"] = nil,
+                ["ind"] = nil,
+                ["rel"] = nil,
+                }
 
 a.registered_command[cname] = function(param)
             
@@ -12,7 +25,7 @@ a.registered_command[cname] = function(param)
     passes[4] = a.registered_command["do_nothing"]
     
     if(passes[a.pass]) then
-        passes[a.pass](param)                                                            -- Call the Function of the Pass
+        passes[a.pass](param, mode)                                                            -- Call the Function of the Pass
 
     end
     

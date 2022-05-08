@@ -1,7 +1,20 @@
 local a = ass
 local l = logger
 local cname = "ora"
-local code
+local mode = {
+                ["imp"] = nil,
+                ["imm"] = "09",
+                ["zp"]  = "05",
+                ["zpx"] = "15",
+                ["zpy"] = nil,
+                ["izx"] = "01",
+                ["izy"] = "11",
+                ["abs"] = "0d",
+                ["abx"] = "1d",
+                ["aby"] = "19",
+                ["ind"] = nil,
+                ["rel"] = nil,
+                }
 
 a.registered_command[cname] = function(param)
             
@@ -12,7 +25,7 @@ a.registered_command[cname] = function(param)
     passes[4] = a.registered_command["do_nothing"]
     
     if(passes[a.pass]) then
-        passes[a.pass](param)                                                            -- Call the Function of the Pass
+        passes[a.pass](param, mode)                                                           -- Call the Function of the Pass
 
     end
     

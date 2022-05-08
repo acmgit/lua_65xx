@@ -10,13 +10,14 @@ lib.error = {
               [0] = "Ok. No Error found.",                                               -- 00
               "File not found.",                                                         -- 01
               "Unknown Command found.",                                                  -- 02
-              "Range Error: Only Byte allowed.",                                         -- 03
+              "Range error: Only Byte allowed.",                                         -- 03
               "Base error, * is twice in the code.",                                     -- 04
               "Illegal Labeldefinition found.",                                          -- 05
               "Illegal value found.",                                                    -- 06
               "Unkown Label found.",                                                     -- 07
               "Branch out of Range.",                                                    -- 08
-              
+              "# without Value found.",                                                  -- 09
+              "Illegal mode found.",                                                     -- 10              
             }
 
 function lib.write_error(number)
@@ -270,7 +271,8 @@ function lib.print_code(codebase)
     
     for k,v in pairs(codebase) do
         index = a.adress[k]
-
+        value = a.mode[k] or "n/a"
+        
         if(index) then
             print(k .. ": $" .. index .. ": " .. v)
             

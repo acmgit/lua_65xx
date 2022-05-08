@@ -1,8 +1,21 @@
 local a = ass
 local l = logger
 local cname = "adc"
-local code
-
+local mode = {
+                ["imp"] = nil,
+                ["imm"] = "69",
+                ["zp"]  = "65",
+                ["zpx"] = "75",
+                ["zpy"] = nil,
+                ["izx"] = "61",
+                ["izy"] = "71",
+                ["abs"] = "6d",
+                ["abx"] = "7d",
+                ["aby"] = "79",
+                ["ind"] = nil,
+                ["rel"] = nil,
+                }
+                
 a.registered_command[cname] = function(param)
             
     local passes = {}
@@ -13,7 +26,7 @@ a.registered_command[cname] = function(param)
     
         
     if(passes[a.pass]) then
-        passes[a.pass](param)                                                            -- Call the Function of the Pass
+        passes[a.pass](param, mode)                                                            -- Call the Function of the Pass
     end
     
 end

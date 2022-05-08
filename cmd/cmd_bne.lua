@@ -1,7 +1,20 @@
 local a = ass
 local l = logger
 local cname = "bne"
-local code = "d0"
+local mode = {
+                ["imp"] = nil,
+                ["imm"] = nil,
+                ["zp"]  = nil,
+                ["zpx"] = nil,
+                ["zpy"] = nil,
+                ["izx"] = nil,
+                ["izy"] = nil,
+                ["abs"] = nil,
+                ["abx"] = nil,
+                ["aby"] = nil,
+                ["ind"] = nil,
+                ["rel"] = "d0",
+                }
 
 
 a.registered_command[cname] = function(param)
@@ -13,7 +26,7 @@ a.registered_command[cname] = function(param)
     passes[4] = a.registered_command["calc_branch"]
     
     if(passes[a.pass]) then
-        passes[a.pass](param)                                                            -- Call the Function of the Pass
+        passes[a.pass](param, mode)                                                            -- Call the Function of the Pass
 
     end
     

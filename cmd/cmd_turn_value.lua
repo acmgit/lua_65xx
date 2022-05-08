@@ -2,7 +2,7 @@ local a = ass
 local l = logger
 local cname = "turn_value"
 
-a.registered_command[cname] = function(param)
+a.registered_command[cname] = function(param, modes)
 
     local line = a.source[a.current_line]
     local value
@@ -31,18 +31,18 @@ a.registered_command[cname] = function(param)
             line = cmd[1] .. lo
             
         else
-            if(not pre:find("#",1,pre:len())) then
+            if(not pre:match("[#]")) then
                 line = cmd[1] .. " " .. lo .. " " .. hi
                 
-            elseif(pre:find(">",1,pre:len())) then
+            elseif(pre:match("[>]")) then
                 line = cmd[1] .. " " .. hi
                 pre = pre:match("[^<>]+")
-                a.pre = pre
+                a.pre[a.current_line] = pre
                 
-            elseif(pre:find("<",1,pre:len())) then
+            elseif(pre:match("[<]")) then
                 line = cmd[1] .. " " .. lo
                 pre = pre:match("[^<>]+")
-                a.pre = pre                
+                a.pre[a.current_line] = pre                
             
             else
                 a.lib.write_error(03)

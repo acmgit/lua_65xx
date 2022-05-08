@@ -9,11 +9,11 @@ local is_label
 
 local cmd = {}
 
-a.registered_command[cname] = function(param)
+a.registered_command[cname] = function(param, modes)
     local parameter = ""
     local line = param[1] .. " "
-    local pre_line                                                                       -- Hold the signs BEFORE the number
-    local post_line                                                                      -- Hold the signs AFTER the number
+    local pre_line = ""                                                                       -- Hold the signs BEFORE the number
+    local post_line = ""                                                                      -- Hold the signs AFTER the number
     local value = nil
     
     cmd["{"] = is_formula
@@ -29,18 +29,18 @@ a.registered_command[cname] = function(param)
         
     end
     
-    pre_line = (parameter:match("[^%w{}%[,%*/%+%-%%%$%,xy<>]+[<>]+") or "")
-    post_line = (parameter:match("[^%dabcdef%]}]+[%),xy]+") or "")
+    pre_line = (parameter:match("[%(#<>]+") or "")
+    post_line = (parameter:match("[%),xy]+") or "")
     value = (parameter:match("[%w%[%]%{%}%*/%+%-%s%%%$_:]+") or "")
-                
+    
     a.pre[a.current_line] = pre_line
     a.post[a.current_line] = post_line
-        
+    
     if(not value:sub(1,1) or (value:sub(1,1) == "")) then 
         
         if(line) then
             table.insert(a.code, line)
-            
+            a.registered_command["calc_mode"](a.lib.trim(line), nil, modes)
         else
             table.insert(a.code, " ")
             
@@ -49,7 +49,7 @@ a.registered_command[cname] = function(param)
     
     end -- if(not value
         
-    if(cmd[value:sub(1,1)]) then
+    if(cmd[value:sub(1,1)]) then                                                         -- Solve the Value
         value = cmd[value:sub(1,1)](value)
         
     else
@@ -60,13 +60,14 @@ a.registered_command[cname] = function(param)
             a.lib.write_error(06)
             value = " "
         
-        end
+        end -- if(tonumber
     
     end -- if(not value
-    
+
+    a.registered_command["calc_mode"](param[1], value, modes)
     table.insert(a.code, line .. (value or ""))
     
-end
+end -- a.registered_command[name
 
 function is_dec(value)
         return a.lib.dec2hex(value)

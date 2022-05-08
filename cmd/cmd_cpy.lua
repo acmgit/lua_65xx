@@ -1,7 +1,20 @@
 local a = ass
 local l = logger
 local cname = "cpy"
-local code
+local mode = {
+                ["imp"] = nil,
+                ["imm"] = "c0",
+                ["zp"]  = "c4",
+                ["zpx"] = nil,
+                ["zpy"] = nil,
+                ["izx"] = nil,
+                ["izy"] = nil,
+                ["abs"] = "cc",
+                ["abx"] = nil,
+                ["aby"] = nil,
+                ["ind"] = nil,
+                ["rel"] = nil,
+                }
 
 a.registered_command[cname] = function(param)
             
@@ -11,7 +24,10 @@ a.registered_command[cname] = function(param)
     passes[2] = a.registered_command["turn_value"]
     passes[4] = a.registered_command["do_nothing"]
     
-        passes[a.pass](param)                                                            -- Call the Function of the Pass
+    if(passes[a.pass]) then
+        passes[a.pass](param, mode)                                                            -- Call the Function of the Pass
+
+    end                                                            -- Call the Function of the Pass
 
 end
     

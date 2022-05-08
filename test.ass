@@ -14,11 +14,11 @@ test3:  =   {25 + 3 * %1101 - $5}
 
     adc #15
     and 2763,y
-    asl #63
+    asl 63
     bcc $0880
-    bcs $088b                                    ; This is a comment ...
+    bcs $0887                                    ; This is a comment ...
     beq $0803
-    bit #1
+    bit 1
     bmi [test_label_05:]
     bne $0860,x
     bpl $0880
@@ -34,17 +34,18 @@ test_label_05:
     cpx #[a]
     lda #[test:]
     cpy #20
-    dec (05),x
+    ora (05),x
     dex
     dey
     eor #{63+$af+%11}
-    inc (05),y
+    ora (05),y
     inx
     iny
     jmp (2763)
     jsr [print:]
     lda 60
-    ldx #>$ab1e
+    lda #>$ab1e
+    ldx #<$ab1e
     ldy #{$65+3*%1100/10}                         ; Formula
     lsr 6330
     nop
@@ -57,7 +58,7 @@ noch_ein_label:
     rol 6345
     ror 6345
     rti
-    rts #{3-5}
+    rts
     sbc #%11001100
     sec
     sei

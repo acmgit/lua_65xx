@@ -2,7 +2,7 @@ local a = ass
 local l = logger
 local cname = "calc_branch"
 
-a.registered_command[cname] = function()
+a.registered_command[cname] = function(param, modes)
 
     local adress = a.adress[a.current_line]
     local line = a.source[a.current_line] or ""
@@ -46,6 +46,7 @@ a.registered_command[cname] = function()
     
     math.abs(diff)
     diff = a.lib.dec2hex(diff)
-    table.insert(a.code, cmd .. " " .. diff)
+    a.mode[a.current_line] = modes["rel"]
+    table.insert(a.code, modes["rel"] .. " " .. diff)
     
 end

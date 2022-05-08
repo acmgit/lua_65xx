@@ -20,7 +20,8 @@ ass.registered_command = {}                                                     
 ass.error = {}                                                                           -- Reports with Number. 0 = Ok.
 ass.pre = {}                                                                             -- Save the presigns
 ass.post = {}                                                                            -- Save the postsigns
-ass.adress = {}
+ass.mode = {}                                                                            -- Mode for the command
+ass.adress = {}                                                                          -- Adress of the line
 ass.start = 0                                                                            -- Current Base to Calc, Command *
 ass.last = 0                                                                             -- Codeend
 ass.pc = 0                                                                               -- Current Adress of the Processorpointer
@@ -64,6 +65,7 @@ local commands = {
                     "cmd_star.lua",
                     "cmd_label.lua",
                     "cmd_dc.lua",
+                    "cmd_calc_mode.lua",
                     
                     -- Official Assembler-Commands
                     "cmd_lda.lua",
@@ -177,13 +179,13 @@ for i=1,#a.lib.parse do
       print("Pass " .. a.pass .. " finished without Errors.\n")
       l.log("Pass " .. a.pass .. " finished without Errors.")
   end
-
-  a.lib.print_code(a.code)
   
   a.source = {}
   a.source = a.code 
   a.current_line = 0
   
+    a.lib.print_code(a.source)
+    
 end -- for i=
 
 a.lib.report()

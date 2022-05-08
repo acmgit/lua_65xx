@@ -12,8 +12,8 @@ local a = ass
 local l = logger
 local lib = a.lib
 
--- Pass 1 only calculates all Values or Formulas to hex.
-lib.parse[1] = function()
+-- Calculates all Values or Formulas to hex.
+lib.parse[1] = function()    
     for k,v in pairs(a.source) do
         a.current_line = k
         
@@ -32,7 +32,7 @@ lib.parse[1] = function()
             
             if(a.registered_command[helpcmd]) then
                 a.registered_command[helpcmd](cmd)                                       -- Valid cmd found
-            
+                
             else
                 if(cmd[1]:find(":")) then                                                -- Line is a Lable
                     a.registered_command["label"](cmd[1])
@@ -54,6 +54,7 @@ lib.parse[1] = function()
     
 end -- parse[1]
 
+-- Turns the words in lo & hi
 lib.parse[2] = function()
     for k,v in pairs(a.source) do
         a.current_line = k    
@@ -74,6 +75,7 @@ lib.parse[2] = function()
 
 end
 
+-- Calculates the Adress per line
 lib.parse[3] = function ()
     local branch = {}
     
@@ -92,11 +94,20 @@ lib.parse[3] = function ()
     for k,v in pairs(a.source) do
         a.current_line = k
         local line = a.lib.trim(a.source[k])
-        local cmd = a.lib.trim(line:sub(1,3))
+        local cmd = line:sub(1,3)
         local par = a.lib.trim(line:sub(4, line:len()))
-        local len = a.lib.round(par:len()/3)
+        local len = 0
         cmd = cmd:match("[^%s]+")
         
+        local data = {}                                                                  -- count the operators
+        for value in  par:gmatch("[%x]+") do
+            table.insert(data, value)
+                
+        end -- for value
+        
+        len = len + #data or 0            
+        
+        -- calculates the regulary commands
         if(a.registered_command[cmd]) then                                               -- a valid code needs 1 byte
             if(branch[cmd]) then                                                         -- all branch-codes nees only 2 byte
                 len = 1
@@ -105,23 +116,28 @@ lib.parse[3] = function ()
             len = len + 1
             
         else
+            -- calculates Labels
             if(cmd) then                                                                 -- was cmd valid but no command? so it's a label
                 local label = a.lib.trim(line)
                 a.labels[label] = a.pc
                 len = 0
                 line = " "
                 
+            else -- if(cmd
             end -- if(cmd
             
         end -- if(a.registered
-            
-        a.adress[k] = a.pc
+        
+        if(cmd == "dc") then                                                             -- dc is not a cpu-command
+            len = len - 1
+        end
+        
+        a.adress[a.current_line] = a.pc
         a.pc = a.lib.dec2hex(a.lib.hex2dec(a.pc) + len)
         table.insert(a.code, line)
-                
     end -- for k,v
         
-    a.last = (a.adress[a.pc] or "n/a")
+    a.last = (a.pc or "n/a")
     
 end -- lib.parse[3]
 
@@ -155,14 +171,10 @@ lib.parse[4] = function ()
                     line = line .. w 
                     
                 elseif(lab:len() > 2) then
-                    if(pre:find("#",1,pre:len())) then
+                    if(pre:match("[#]") or cmd == "dc") then
                         a.lib.write_error(03)
                         line = line .. w
-                        
-                    elseif(cmd == "dc ") then
-                        a.lib.write_error(03)
-                        line = line .. w
-                        
+
                     else
                         line = line .. lab:sub(-2) .. " "
                         line = line .. lab:sub(1,2) .. " "
@@ -185,6 +197,7 @@ lib.parse[4] = function ()
         
     end -- for k,v
     
+    -- Calculates the Branches
     a.source = {}
     a.source = a.code
     a.code = {}
@@ -201,9 +214,38 @@ lib.parse[4] = function ()
         else
             table.insert(a.code, a.source[k])
             
+        end -- if(cmd
+    
+    end -- for k,v
+
+end -- lib.parse[4]
+        
+lib.parse[5] = function ()
+    print("Quelltext wird komprimiert.")
+    for k,v in pairs(a.source) do
+        a.current_line = k
+        v = a.lib.trim(v)
+        
+        if(v == "" or not v) then
+            table.remove(a.adress, k)
+            table.remove(a.pre, k)
+            table.remove(a.post, k)
+            table.remove(a.mode, k)
+            table.remove(a.source, k)
+            
+        else
+            if(a.mode[k]) then
+                local line = v:sub(4,v:len())
+                a.code[k] = a.mode[k] .. " " .. line
+                a.code[k] = a.lib.trim(a.code[k])
+                
+            else
+                a.code[k] = v
+                
+            end
+            
         end
         
     end
     
-end -- lib.parse[4]
-        
+end
