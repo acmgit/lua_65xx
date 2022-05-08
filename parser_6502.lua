@@ -220,32 +220,96 @@ lib.parse[4] = function ()
 
 end -- lib.parse[4]
         
+-- Postcalculate and turns unsolved Commands in digits
 lib.parse[5] = function ()
-    print("Quelltext wird komprimiert.")
-    for k,v in pairs(a.source) do
+                        
+    for k,v in pairs(a.source) do                                                        -- Postcalc the line, for example unsolved labels
         a.current_line = k
-        v = a.lib.trim(v)
-        
-        if(v == "" or not v) then
-            table.remove(a.adress, k)
-            table.remove(a.pre, k)
-            table.remove(a.post, k)
-            table.remove(a.mode, k)
-            table.remove(a.source, k)
+        if(not a.mode[k] and v ~= " ") then
+            cmd = v:match("[%w]+")
+            if(cmd:len() == 3) then
+                a.registered_command[cmd](cmd)
+                
+            end -- if(cmd:len()
             
-        else
-            if(a.mode[k]) then
-                local line = v:sub(4,v:len())
-                a.code[k] = a.mode[k] .. " " .. line
-                a.code[k] = a.lib.trim(a.code[k])
+        end -- if(not a.mode
+        
+    end -- for k,v
+    
+    a.code = {}
+    
+    for k,v in pairs(a.source) do                                                        -- Remove the empty lines
+        a.current_line = k
+        if(v ~= " ") then
+            local cmd = v:sub(1,3)
+            local line
+            
+            if(cmd) then
+                if(a.mode[k]) then     
+                    line = a.mode[k] .. " " .. v:gsub(cmd, "")                           -- cmd is a valid token
+                    a.code[k] = line
+                    
+                else
+                    a.code[k] = v:gsub(cmd, "")                                          -- cmd was a datastore-command
                 
-            else
-                a.code[k] = v
-                
+                end
+            
             end
             
-        end
+        else
+            a.source[k] = nil
+            a.adress[k] = nil
+            a.mode[k] = nil
+            a.pre[k] = nil
+            a.post[k] = nil
+            
+        end -- if(not v ==
+        
+    end -- for k,v
+    local code = {}
+    
+    for i=1,#a.code do
+        table.insert(code, a.code[i])
+    
+    end
+    
+    a.code = {}
+    a.code = code
+    
+    code = {}
+    for i=1,#a.adress do
+        table.insert(code, a.adress[i])
+    
+    end
+    a.adress = {}
+    a.adress = code
+    
+    a.source = {}
+    
+    local file = io.open(a.objectname, "wb")
+    
+    if(not file) then
+        lib.write_error(11)
+        os.exit()
         
     end
+    
+    local hi, lo
+    hi = a.lib.hex2dec(a.start:sub(1,2))
+    lo = a.lib.hex2dec(a.start:sub(-2))
+    
+    file:write(tonumber(lo))
+    file:write(tonumber(hi))
+    
+    for k,v in pairs(a.code) do
+        for data in v:gmatch("[%x]+") do
+            data = lib.hex2dec(data)
+            file:write(string.unpack(data))
+        end
+        
+            
+    end
+    
+    file:close()
     
 end
