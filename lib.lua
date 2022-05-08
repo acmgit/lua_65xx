@@ -17,7 +17,9 @@ lib.error = {
               "Unkown Label found.",                                                     -- 07
               "Branch out of Range.",                                                    -- 08
               "# without Value found.",                                                  -- 09
-              "Illegal mode found.",                                                     -- 10              
+              "Illegal mode found.",                                                     -- 10
+              "Can't open file.",                                                        -- 11
+              
             }
 
 function lib.write_error(number)
@@ -285,12 +287,27 @@ function lib.print_code(codebase)
     
 end -- print_code
 
+        
 function lib.report()
-
+    local cend = {}
+    local value
+        
     print("------<<<<<<[ Report ]>>>>>>------\n")
-    print("Filenmae           = " .. a.filename)
+    print("Source             = " .. a.filename)
+    print("Object             = " .. a.objectname)
     print("Code starts at     = $" .. a.start)
-    print("Code ends at       = $" .. (a.adress[#a.adress] or 0))
+
+    value = lib.trim(a.code[#a.adress])
+    for data in value:gmatch("[%x]+") do
+        table.insert(cend, data)
+        
+    end
+    
+    value = lib.hex2dec(a.adress[#a.adress])
+    value = value + #cend -1
+    value = lib.dec2hex(value)
+    
+    print("Code ends at       = $" .. value)
     print("Number of Lines    = " .. #a.adress .. "\n")
     print("Labels are:")
     for k,v in pairs(a.labels) do

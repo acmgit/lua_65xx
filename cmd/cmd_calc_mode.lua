@@ -11,6 +11,14 @@ local cname = "calc_mode"
 
 a.registered_command[cname] = function(param, value, modes)
 
+    if(a.pass == 5) then
+        modes = value
+        local line = a.source[a.current_line]
+        value = line:sub(4,line:len())
+        value = value:gsub("%s","")
+        
+    end
+    
     if(value and value:match("[%[{:]")) then                                                        -- value is a text, label or formula 
         a.mode[a.current_line] = nil
         return
