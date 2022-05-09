@@ -31,6 +31,9 @@ ass.objectname = ""                                                             
 ass.debug = true                                                                         -- Error-Flag, true = all ok
 ass.current_line = 0                                                                     -- Current line to process
 
+ass.version = 1
+ass.revision = 0
+
 ass.pass = 1                                                                             -- Current Assembler-Pass
 ass.base = 0
 
@@ -178,6 +181,8 @@ file:close()
 os.execute("clear")
 -- change this in "cls" if you're in Windows
 
+print("Welcome to the Lua-Assembler Version " .. a.version .. "." .. a.revision .. ".")
+print("Compiling now " .. a.filename .. ".\n")
 a.lib.print_code(a.source)
 
 for i=1,#a.lib.parse do
@@ -209,3 +214,6 @@ for i=1,#a.lib.parse do
 end -- for i=
 
 a.lib.report()
+
+print("\nCompiled the file to " .. a.objectname .. ".")
+print("Thank you for using the assembler.")

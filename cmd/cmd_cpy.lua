@@ -17,9 +17,9 @@ local mode = {
                 }
 
 a.registered_command[cname] = function(param)
-            
+
     local passes = {}
-    
+
     passes[1] = a.registered_command["calc_parameter"]
     passes[2] = a.registered_command["turn_value"]
     passes[4] = a.registered_command["do_nothing"]
@@ -31,4 +31,4 @@ a.registered_command[cname] = function(param)
     end                                                            -- Call the Function of the Pass
 
 end
-    
+
