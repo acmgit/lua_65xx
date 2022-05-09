@@ -236,8 +236,6 @@ lib.parse[5] = function ()
         
     end -- for k,v
     
-    a.code = {}
-    
     for k,v in pairs(a.source) do                                                        -- Remove the empty lines
         a.current_line = k
         if(v ~= " ") then
@@ -247,10 +245,11 @@ lib.parse[5] = function ()
             if(cmd) then
                 if(a.mode[k]) then     
                     line = a.mode[k] .. " " .. v:gsub(cmd, "")                           -- cmd is a valid token
-                    a.code[k] = line
+                    table.insert(a.code,line)
                     
                 else
-                    a.code[k] = v:gsub(cmd, "")                                          -- cmd was a datastore-command
+                    line = v:gsub(cmd, "")
+                    table.insert(a.code, line)                                          -- cmd was a datastore-command
                 
                 end
             
@@ -298,13 +297,15 @@ lib.parse[5] = function ()
     hi = a.lib.hex2dec(a.start:sub(1,2))
     lo = a.lib.hex2dec(a.start:sub(-2))
     
-    file:write(tonumber(lo))
-    file:write(tonumber(hi))
+    file:write(string.char(lo))                                                          -- Start of
+    file:write(string.char(hi))                                                          -- the Programm
+    --file:write(string.char("0"))                                                         -- Track
+    --file:write(string.char("0"))                                                          -- Sector
     
     for k,v in pairs(a.code) do
         for data in v:gmatch("[%x]+") do
             data = lib.hex2dec(data)
-            file:write(string.unpack(data))
+            file:write(string.char(data))
         end
         
             

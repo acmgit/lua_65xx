@@ -4,27 +4,27 @@
 ; **                                      **
 ; ******************************************
 
-* = $0801                                       ; Start of Basicram
+* = $c000                                       ; Start of Basicram
 
 print:  =   $ab1e
 result: =   {25*$3}
 test:   =   34
 test2:  =   %11011
 test3:  =   {25 + 3 * %1101 - $5}
-
+    
     adc #15
     and 2763,y
     asl 63
-    bcc $0880
-    bcs $0887                                    ; This is a comment ...
-    beq $0803
+    bcc $c080
+    bcs $c087                                    ; This is a comment ...
+    beq $c003
     bit 1
     bmi [test_label_05:]
-    bne $0860,x
-    bpl $0880
+    bne $c060,x
+    bpl $c080
     brk
-    bvc $0805
-    bvs $0807
+    bvc $c005
+    bvs $c007
 test_label_05:
     clc
     cld
@@ -32,7 +32,7 @@ test_label_05:
     clv
     cmp #03
     cpx #[a]
-    lda #[test:]
+    lda #[print:]
     cpy #20
     ora (05),x
     dex

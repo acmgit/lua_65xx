@@ -128,6 +128,23 @@ local commands = {
                     "cmd_bne.lua",
                     "cmd_beq.lua",
                     
+                    -- Illegal Opcodes
+                    "cmd_ahx.lua",
+                    "cmd_aic.lua",
+                    "cmd_alr.lua",
+                    "cmd_axs.lua",
+                    "cmd_dcp.lua",
+                    "cmd_isc.lua",
+                    "cmd_las.lua",
+                    "cmd_lax.lua",
+                    "cmd_rla.lua",
+                    "cmd_rra.lua",
+                    "cmd_sax.lua",
+                    "cmd_shy.lua",
+                    "cmd_shx.lua",
+                    "cmd_slo.lua",
+                    "cmd_sre.lua",
+                    
                   }
                   
 for k,v in pairs(commands) do
@@ -187,7 +204,7 @@ for i=1,#a.lib.parse do
   a.source = a.code 
   a.current_line = 0
   
-  --a.lib.print_code(a.code)
+  a.lib.print_code(a.code)
     
 end -- for i=
 

@@ -268,6 +268,16 @@ function lib.calc_adress(line)
     
 end
 
+function lib.get_hilo(adress)
+    local value, hi, lo
+    value = adress:match("[%x][%x][%x][%x]")
+    hi = value:sub(1,2)
+    lo = value:sub(-2)
+    
+    return hi, lo
+    
+end -- get_hilo
+    
 function lib.print_code(codebase)
     local index = ""
     
