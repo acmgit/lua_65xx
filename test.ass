@@ -44,7 +44,7 @@ test_label_05:
     jmp (2763)
     jsr [print:]
     lda 60
-    lda #>$ab1e
+    lda #>[print:]
     ldx #<$ab1e
     ldy #{$65+3*%1100/10}                         ; Formula
     lsr 6330

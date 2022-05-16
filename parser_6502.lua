@@ -109,7 +109,7 @@ lib.parse[3] = function ()
 
         -- calculates the regulary commands
         if(a.registered_command[cmd]) then                                               -- a valid code needs 1 byte
-            if(branch[cmd]) then                                                         -- all branch-codes nees only 2 byte
+            if(branch[cmd]) then                                                         -- all branch-codes need only 2 byte
                 len = 1
 
             end -- if(branch
@@ -140,6 +140,7 @@ lib.parse[3] = function ()
 
 end -- lib.parse[3]
 
+-- Calculates the Branches
 lib.parse[4] = function ()
     local cmd = {}
 
@@ -171,8 +172,18 @@ lib.parse[4] = function ()
 
                 elseif(lab:len() > 2) then
                     if(pre:match("[#]") or cmd == "dc") then
-                        a.lib.write_error(03)
-                        line = line .. w
+                        local hilo = pre:match("[<>]") or nil
+                        if(hilo == "<") then
+                                line = line .. lab:sub(-2)
+
+                        elseif(hilo == ">") then
+                                line = line .. lab:sub(1,2)
+
+                        else
+                            a.lib.write_error(03)
+                            line = line .. w
+
+                        end -- if(hilo
 
                     else
                         line = line .. lab:sub(-2) .. " "

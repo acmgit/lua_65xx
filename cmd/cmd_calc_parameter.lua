@@ -6,8 +6,30 @@ local is_formula
 local is_binary
 local is_hex
 local is_label
+local is_hilo
 
 local cmd = {}
+local base = {}
+
+base = {
+        ["$"] = function(value) return value:sub(2,value:len()) end,                     -- Hex
+        ["%"] = function(value) return a.lib.is_binary(value:sub(2,value:len())) end,   -- Bin 
+        [" "] = function(value) return a.lib.is_dec(value:sub(1,value:len())) end,      -- Dec
+        ["<"] = function(value) if(base[value:sub(2,2)]) then                             -- Lo-Value
+                                    value, _ = base[value:sub(2,value:len())](value)
+                                    return value
+                                else
+                                    return nil
+                                end
+                end,
+        [">"] = function(value) if(base[value:sub(2,2)]) then                             -- Hi-Value
+                                    _, value = base[value:sub(2,value:len())](value)
+                                    return value
+                                else
+                                    return nil
+                                end
+                end,
+    }
 
 a.registered_command[cname] = function(param, modes)
     local parameter = ""
@@ -20,6 +42,8 @@ a.registered_command[cname] = function(param, modes)
     cmd["["] = is_label
     cmd["%"] = is_binary
     cmd["$"] = is_hex
+    cmd["<"] = is_hilo
+    cmd[">"] = is_hilo
 
     for k = 2, #param do
         if(k) then
@@ -95,7 +119,7 @@ function is_formula(value)
 end
 
 function is_label(value)
-   local val = value:match("[^%[%]#%$%%]+")
+   local val = value:match("[^%[%]#<>%$%%]+")
     local lab = val:sub(-1,-1)
 
     if(lab == ":") then
@@ -115,3 +139,23 @@ function is_label(value)
     end -- if(value:sub
 
 end -- function is_label
+
+function hilo(value)
+    local val 
+    
+    val = value:sub(1,1)
+
+    if tonumber(value(sub(1,1))) then 
+        val = base[" "](value)
+
+    elseif base[val] then
+        val = base[val](value)
+    
+    elseif(not val) then
+        a.lib.write_error(06)
+        return nil, nil 
+    end
+    
+    return sub(1,2), val:sub(3,val:len())
+
+end -- function hilo(value)
