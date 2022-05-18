@@ -6,11 +6,12 @@
 
 * = $c000                                       ; Start of Basicram
 
-print:  =   $ab1e
 result: =   {25*$3}
 test:   =   34
 test2:  =   %11011
 test3:  =   {25 + 3 * %1101 - $5}
+
+    #include <basic.a>
     
     adc #15
     and 2763,y
@@ -42,9 +43,9 @@ test_label_05:
     inx
     iny
     jmp (2763)
-    jsr [print:]
+    jsr [strout:]
     lda 60
-    lda #>[print:]
+    lda #>[strout:]
     ldx #<$ab1e
     ldy #{$65+3*%1100/10}                         ; Formula
     lsr 6330
@@ -71,8 +72,10 @@ noch_ein_label:
     txa
     txs
     tya
-    dc $00, $00, $00, $01, $1e, $ab, $fd, $ff
-    dc [result:], 05, %1101
-    dc %1001, 20, 70, $ab, [Das kommt auf den Bildschirm.]
+    dc $00, $00, $00, $01, $ab, $1e, $fd, $ff
+    dc [result:], 05, %1101, [strout:]
+    dc %1001, 20, 70, $ab
+mytext:
+    dc [das kommt auf den bildschirm.], 00
     dc {5*3+4-%1101}, 2, 67, $ff
     dc 5, -$3, 73, 21

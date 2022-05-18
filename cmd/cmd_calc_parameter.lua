@@ -18,15 +18,19 @@ base = {
         ["<"] = function(value) if(base[value:sub(2,2)]) then                             -- Lo-Value
                                     value, _ = base[value:sub(2,value:len())](value)
                                     return value
+
                                 else
                                     return nil
+
                                 end
                 end,
         [">"] = function(value) if(base[value:sub(2,2)]) then                             -- Hi-Value
                                     _, value = base[value:sub(2,value:len())](value)
                                     return value
+
                                 else
                                     return nil
+
                                 end
                 end,
     }
@@ -52,11 +56,15 @@ a.registered_command[cname] = function(param, modes)
         end
 
     end
+    
+    local idx
 
-    pre_line = (parameter:match("[%(#<>]+") or "")
-    post_line = (parameter:match("[%),xy]+") or "")
     value = (parameter:match("[%w%[%]%{%}%*/%+%-%s%%%$_:]+") or "")
-
+    _, idx = parameter:find(value,1,parameter:len())
+    pre_line = (parameter:match("[%(#<>]+") or "")
+    post_line = parameter:sub(idx,parameter:len())                                       -- You have to cut the parameter, because
+    post_line = (post_line:match("[%),xy]+") or "")                                      -- it's possible that there are x or y in
+                                                                                         -- name of the label.
     a.pre[a.current_line] = pre_line
     a.post[a.current_line] = post_line
 

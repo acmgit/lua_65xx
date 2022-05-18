@@ -130,12 +130,12 @@ end -- function formula
 
 function convert_text(text)
     local line = ""
+    text = text:match("[^%[%]]+[%w]+")
     for i=1,text:len() do
-        line = line .. " " .. a.lib.dec2hex(text:byte(i))
+        line = line .. a.lib.dec2hex(text:byte(i)) .. " "
 
     end
 
-    line = a.lib.trim(line)
     return line
 
 end -- function convert_text

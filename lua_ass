@@ -22,6 +22,7 @@ ass.pre = {}                                                                    
 ass.post = {}                                                                            -- Save the postsigns
 ass.mode = {}                                                                            -- Mode for the command
 ass.adress = {}                                                                          -- Adress of the line
+ass.path = {}                                                                            -- Searchpath for Files
 ass.start = 0                                                                            -- Current Base to Calc, Command *
 ass.last = 0                                                                             -- Codeend
 ass.pc = 0                                                                               -- Current Adress of the Processorpointer
@@ -38,6 +39,8 @@ ass.pass = 1                                                                    
 ass.base = 0
 
 local a = ass
+
+a.path = {"", "inc/", "include/"}
 
 if((a.filenname == "") or (not a.filename)) then 
     print("Usage: lua_ass <Filename>")
@@ -156,28 +159,14 @@ for k,v in pairs(commands) do
   
 end -- for k,v
 
-local file = io.open(a.filename, "r")
 
-if(not file) then
-  print(a.filename)
-  a.lib.write_error(01)
-  os.exit()
 
-end -- if(not file
 
 l.log(" ---===<<< Start >>>===---")
 l.log("Reading file " .. a.filename .. ".")
 
-local lnumber = 0
+a.lib.read_source(a.filename)
 
--- Read the source-code.
-for line in io.lines(a.filename) do
-  lnumber = lnumber + 1
-  table.insert(a.source, line)
-
-end
-
-file:close()
 os.execute("clear")
 -- change this in "cls" if you're in Windows
 

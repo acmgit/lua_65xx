@@ -19,7 +19,7 @@ lib.parse[1] = function()
 
         comment = string.find(v, ";")                                                    -- Remove the comment
         if(comment) then                                                                 -- Comment found
-            v = string.sub(v,1,comment)                                                  -- Extract it from the Code.
+            v = string.sub(v,1,comment-1)                                                -- Extract it from the Code.
 
         end -- if(comment
 
@@ -129,6 +129,7 @@ lib.parse[3] = function ()
 
         if(cmd == "dc") then                                                             -- dc is not a cpu-command
             len = len - 1
+
         end
 
         a.adress[a.current_line] = a.pc
@@ -309,8 +310,7 @@ lib.parse[5] = function ()
 
     file:write(string.char(lo))                                                          -- Start of
     file:write(string.char(hi))                                                          -- the Programm
-    --file:write(string.char("0"))                                                         -- Track
-    --file:write(string.char("0"))                                                          -- Sector
+
 
     for k,v in pairs(a.code) do
         for data in v:gmatch("[%x]+") do

@@ -278,6 +278,40 @@ function lib.get_hilo(adress)
 
 end -- get_hilo
 
+function lib.read_source(filename)
+
+    local file = nil
+    for k,p in pairs(a.path) do
+        print("Try to open : " .. p .. filename:lower())
+
+        file = io.open(p .. filename:lower(), "r")
+        if(io.type(file) == "file") then break end
+
+    end
+
+    if(not io.type(file)) then
+        a.lib.write_error(01)
+        os.exit()
+
+    end -- if(not file
+
+    -- Read the source-code.
+    for line in io.lines(filename:lower()) do
+        if(line:find("#include")) then
+            local inc = line:sub(line:find("<")+1,line:find(">")-1)
+            lib.read_source(inc)
+
+        else
+            a.current_line = a.current_line + 1
+            table.insert(a.source, line)
+
+        end -- if(line:find
+
+    end -- for line in
+
+    file:close()
+end -- lib.reaed_source
+
 function lib.print_code(codebase)
     local index = ""
 

@@ -28,6 +28,7 @@ a.registered_command[cname] = function(param, value, modes)
     local post = a.post[a.current_line]
     local pre = a.pre[a.current_line]
     local line
+    print(a.current_line .. ": " .. (pre or "") .. " " .. (post or ""))
 
     if(post == "" and pre == "") then
         line = "n/a"

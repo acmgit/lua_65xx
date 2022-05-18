@@ -42,11 +42,12 @@ function calc_label(param)
 
     if(def) then                                                                         -- Label is a Deklaration
         cmd["="](label, def)
+
     else
         a.labels[label] = a.start
         table.insert(a.code, label)
 
-    end
+    end -- if(def
 
 
 end
