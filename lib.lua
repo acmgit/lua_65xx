@@ -23,6 +23,12 @@ lib.error = {
             }
 
 function lib.write_error(number)
+
+    if number > 0 then
+        print(a.source[a.current_line])
+
+    end
+
     print("Line " .. a.current_line .. ": (" .. number .. ") " .. lib.error[number])
     if(number > 0) then
         a.debug = false

@@ -21,7 +21,7 @@ test3:  =   {25 + 3 * %1101 - $5}
     beq $c003
     bit 1
     bmi [test_label_05:]
-    bne $c060,x
+    bne $c060
     bpl $c080
     brk
     bvc $c005
@@ -73,7 +73,7 @@ noch_ein_label:
     txs
     tya
     dc $00, $00, $00, $01, $ab, $1e, $fd, $ff
-    dc [result:], 05, %1101, [strout:]
+    dc [result:], 05, %1101
     dc %1001, 20, 70, $ab
 mytext:
     dc [das kommt auf den bildschirm.], 00

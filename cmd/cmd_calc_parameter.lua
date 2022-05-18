@@ -13,9 +13,9 @@ local base = {}
 
 base = {
         ["$"] = function(value) return value:sub(2,value:len()) end,                     -- Hex
-        ["%"] = function(value) return a.lib.is_binary(value:sub(2,value:len())) end,   -- Bin 
-        [" "] = function(value) return a.lib.is_dec(value:sub(1,value:len())) end,      -- Dec
-        ["<"] = function(value) if(base[value:sub(2,2)]) then                             -- Lo-Value
+        ["%"] = function(value) return a.lib.is_binary(value:sub(2,value:len())) end,    -- Bin 
+        [" "] = function(value) return a.lib.is_dec(value:sub(1,value:len())) end,       -- Dec
+        ["<"] = function(value) if(base[value:sub(2,2)]) then                            -- Lo-Value
                                     value, _ = base[value:sub(2,value:len())](value)
                                     return value
 

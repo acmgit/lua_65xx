@@ -19,8 +19,6 @@ a.registered_command[cname] = function(param, modes)
     value = value:match("[^%s]+[%x]+")
     local len = value:len()
 
-
-
     if(len > 2) then
         local hi = value:sub(1,2)
         local lo = value:sub(-2)
@@ -52,7 +50,7 @@ a.registered_command[cname] = function(param, modes)
 
         end -- (dec
 
-    else
+    else -- if(len>2
         line = cmd[1] .. " " .. value
 
     end -- if(len > 2

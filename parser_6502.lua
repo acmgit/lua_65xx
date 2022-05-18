@@ -77,26 +77,14 @@ end
 
 -- Calculates the Adress per line
 lib.parse[3] = function ()
-    local branch = {}
-
-    -- This are special commands, the adress is 2 byte, the command and operator is 2 bytes too
-    branch = {
-                ["bpl"] = "calc_branch",
-                ["bmi"] = "calc_branch",
-                ["bvc"] = "calc_branch",
-                ["bvs"] = "calc_branch",
-                ["bcc"] = "calc_branch",
-                ["bcs"] = "calc_branch",
-                ["bne"] = "calc_branch",
-                ["beq"] = "calc_branch",
-            }
 
     for k,v in pairs(a.source) do
         a.current_line = k
         local line = a.lib.trim(a.source[k])
         local cmd = line:sub(1,3)
         local par = a.lib.trim(line:sub(4, line:len()))
-        local len = 0
+        local len = a.cmd_len[a.current_line] or 0
+
         cmd = cmd:match("[^%s]+")
 
         local data = {}                                                                  -- count the operators
@@ -105,15 +93,10 @@ lib.parse[3] = function ()
 
         end -- for value
 
-        len = len + #data or 0
 
         -- calculates the regulary commands
         if(a.registered_command[cmd]) then                                               -- a valid code needs 1 byte
-            if(branch[cmd]) then                                                         -- all branch-codes need only 2 byte
-                len = 1
-
-            end -- if(branch
-            len = len + 1
+            len = a.cmd_len[a.current_line] or 0
 
         else
             -- calculates Labels
@@ -128,7 +111,8 @@ lib.parse[3] = function ()
         end -- if(a.registered
 
         if(cmd == "dc") then                                                             -- dc is not a cpu-command
-            len = len - 1
+            len = #data
+            --len = len - 1
 
         end
 
@@ -172,7 +156,7 @@ lib.parse[4] = function ()
                     line = line .. w
 
                 elseif(lab:len() > 2) then
-                    if(pre:match("[#]") or cmd == "dc") then
+                    if(pre:match("[#]") or cmd == "dc ") then
                         local hilo = pre:match("[<>]") or nil
                         if(hilo == "<") then
                                 line = line .. lab:sub(-2)

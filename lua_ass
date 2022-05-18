@@ -23,6 +23,7 @@ ass.post = {}                                                                   
 ass.mode = {}                                                                            -- Mode for the command
 ass.adress = {}                                                                          -- Adress of the line
 ass.path = {}                                                                            -- Searchpath for Files
+ass.cmd_len = {}                                                                         -- Len with Parameter
 ass.start = 0                                                                            -- Current Base to Calc, Command *
 ass.last = 0                                                                             -- Codeend
 ass.pc = 0                                                                               -- Current Adress of the Processorpointer
@@ -159,9 +160,6 @@ for k,v in pairs(commands) do
   
 end -- for k,v
 
-
-
-
 l.log(" ---===<<< Start >>>===---")
 l.log("Reading file " .. a.filename .. ".")
 
@@ -170,6 +168,9 @@ a.lib.read_source(a.filename)
 os.execute("clear")
 -- change this in "cls" if you're in Windows
 
+print(" ---===<<< Start >>>===---")
+print("Reading file " .. a.filename .. ".")
+print(" ")
 print("Welcome to the Lua-Assembler Version " .. a.version .. "." .. a.revision .. ".")
 print("Compiling now " .. a.filename .. ".\n")
 a.lib.print_code(a.source)
