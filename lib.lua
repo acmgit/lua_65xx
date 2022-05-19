@@ -287,22 +287,26 @@ end -- get_hilo
 function lib.read_source(filename)
 
     local file = nil
-    for k,p in pairs(a.path) do
-        print("Try to open : " .. p .. filename:lower())
+    local err = ""
+    local cnt = 0
+    print(filename)
 
-        file = io.open(p .. filename:lower(), "r")
-        if(io.type(file) == "file") then break end
+    repeat
+        cnt = cnt + 1
+        print("Try to open : " .. a.path[cnt]:lower() .. filename:lower())
+        file, err = io.open(a.path[cnt]:lower() .. filename:lower(), "r")
 
-    end
-
-    if(not io.type(file)) then
+    until((type(file) == "userdata") or (cnt > #a.path))
+    
+    if(type(file) == nil) then
         a.lib.write_error(01)
         os.exit()
 
     end -- if(not file
-
+    
+    local line = ""
     -- Read the source-code.
-    for line in io.lines(filename:lower()) do
+    for line in file:lines() do
         if(line:find("#include")) then
             local inc = line:sub(line:find("<")+1,line:find(">")-1)
             lib.read_source(inc)

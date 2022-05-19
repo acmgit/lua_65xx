@@ -43,6 +43,12 @@ local a = ass
 
 a.path = {"", "inc/", "include/"}
 
+--[[
+print(lfs.currentdir())
+table.insert(a.path, lfs.currentdir() .. "/inc/")
+table.insert(a.path, lfs.currentdir() .. "/include/")
+]]--
+
 if((a.filenname == "") or (not a.filename)) then 
     print("Usage: lua_ass <Filename>")
     print("Error, no filename given")
