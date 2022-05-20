@@ -299,6 +299,7 @@ function lib.read_source(filename)
     until((type(file) == "userdata") or (cnt > #a.path))
     
     if(type(file) == nil) then
+        print(filename)
         a.lib.write_error(01)
         os.exit()
 
@@ -312,8 +313,18 @@ function lib.read_source(filename)
             lib.read_source(inc)
 
         else
-            a.current_line = a.current_line + 1
-            table.insert(a.source, line)
+            if(line:find(";")) then                                                      -- Remove all coammands
+                line = line:sub(1,line:find(";")-1,line:len())                                                -- Remove all comment-signs
+            
+            end
+            
+            line = a.lib.trim(line)                                                      -- Remove all leading spaces
+
+            if((line) and (line:len() > 1)) then                                                      -- Check line lenght
+                a.current_line = a.current_line + 1
+                table.insert(a.source, line)
+
+            end -- if(line:len()
 
         end -- if(line:find
 

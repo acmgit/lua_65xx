@@ -17,12 +17,6 @@ lib.parse[1] = function()
     for k,v in pairs(a.source) do
         a.current_line = k
 
-        comment = string.find(v, ";")                                                    -- Remove the comment
-        if(comment) then                                                                 -- Comment found
-            v = string.sub(v,1,comment-1)                                                -- Extract it from the Code.
-
-        end -- if(comment
-
         local cmd = lib.split(v)
         local helpcmd = cmd[1] or ""
         helpcmd = helpcmd:lower()
@@ -115,7 +109,7 @@ lib.parse[3] = function ()
             --len = len - 1
 
         end
-
+        print(a.pc)
         a.adress[a.current_line] = a.pc
         a.pc = a.lib.dec2hex(a.lib.hex2dec(a.pc) + len)
         table.insert(a.code, line)

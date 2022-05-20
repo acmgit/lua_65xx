@@ -62,7 +62,7 @@ function formula(lab, text)
 end
 
 function hex(lab, text)
-    local line = text:sub(2)
+    local line = text:sub(2,text:len())
     a.labels[lab] = line
 
 end
